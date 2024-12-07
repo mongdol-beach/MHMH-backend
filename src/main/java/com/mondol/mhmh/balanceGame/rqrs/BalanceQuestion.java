@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class BalanceQuestion {
     private final int id;
+    private final String description;
     private final String optionA;
     private final String optionB;
 }
