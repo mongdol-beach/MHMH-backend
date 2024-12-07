@@ -1,5 +1,6 @@
 package com.mondol.mhmh.situation;
 
+import com.mondol.mhmh.situation.rqrs.SituationReadItemRs;
 import com.mondol.mhmh.situation.rqrs.SituationReadListRs;
 import com.mondol.mhmh.situation.service.SituationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +20,9 @@ public class SituationController {
     @Operation(summary = "상황 목록을 조회해옵니다.")
     @GetMapping()
     public SituationReadListRs readSituation() {
-        return situationService.readSituationList();
+        return SituationReadListRs.of(
+                situationService.readSituationList()
+                        .stream().map(SituationReadItemRs::from).toList()
+        );
     }
 }
