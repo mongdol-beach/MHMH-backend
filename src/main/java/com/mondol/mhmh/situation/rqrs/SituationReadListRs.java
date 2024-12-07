@@ -1,4 +1,4 @@
-package com.mondol.mhmh.topic.rqrs;
+package com.mondol.mhmh.situation.rqrs;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +7,6 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor(staticName = "of")
-public class TopicReadListRs {
-    private List<TopicReadItemRs> topics;
+public class SituationReadListRs {
+    List<SituationReadItemRs> situations;
 }
