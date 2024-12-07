@@ -8,5 +8,5 @@ import java.util.List;
 @Getter
 @AllArgsConstructor(staticName = "of")
 public class TopicReadListRs {
-    private List<TopicReadItemRs> lists;
+    private List<TopicReadItemRs> topics;
 }

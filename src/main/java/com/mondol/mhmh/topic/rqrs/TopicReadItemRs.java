@@ -9,4 +9,5 @@ public class TopicReadItemRs{
     private int id;
     private String content;
     private boolean isRecommend;
+    private String tip;
 }
