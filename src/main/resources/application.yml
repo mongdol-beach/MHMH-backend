@@ -2,12 +2,14 @@ spring:
   application:
     name: mhmh
   datasource:
-    url: jdbc:postgresql://localhost:5432/<DB명>
-    username: root
-    password: password
+    url: jdbc:postgresql://localhost:5432
+#    username: root
+#    password: password
     driver-class-name: org.postgresql.Driver
-    jpa:
-      show-sql: true
-      database: postgresql
-      hibernate:
-        ddl-auto: update
+  jpa:
+    show-sql: true
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
