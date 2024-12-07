@@ -13,11 +13,13 @@ import com.mondol.mhmh.balanceGame.rqrs.BalanceQuestionListRs;
 import com.mondol.mhmh.balanceGame.service.BalanceGameService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 
+@Tag(name = "balance-game", description = "밸런스 게임 API")
 @RestController
-@RequestMapping("/game")
+@RequestMapping("/balance-game")
 @RequiredArgsConstructor
 public class BalanceGameController {
 
