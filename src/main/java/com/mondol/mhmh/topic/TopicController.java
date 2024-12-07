@@ -16,19 +16,13 @@ public class TopicController {
 
     @Operation(summary = "랜덤 토픽 리스트를 조회해옵니다.")
     @GetMapping()
-    public TopicReadListRs readRandomTopicList(@RequestParam int count) {
+    public TopicReadListRs readRandomTopic(@RequestParam(required = false, defaultValue = "5") int count) {
         return topicService.readTopicList(count);
     }
 
     @Operation(summary = "상황별 토픽 리스트를 조회해옵니다.")
     @GetMapping("/situation/{situation}")
-    public TopicReadListRs readTopicListBySituation(@PathVariable String situation, @RequestParam int count) {
+    public TopicReadListRs readTopicBySituation(@PathVariable String situation, @RequestParam(required = false) int count) {
         return topicService.readTopicList(5);
-    }
-
-    @Operation(summary = "상황별 모든 토픽 리스트를 조회해옵니다.")
-    @GetMapping("/situation/{situation}")
-    public TopicReadListRs readTopicListBySituation(@PathVariable String situation) {
-        return topicService.readTopicList(10);
     }
 }
