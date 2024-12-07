@@ -6,8 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class BalanceAnswerRq {
-    private final int id;
-    private final BalanceAnswerOption option;
+    private final BalanceAnswerOption selectedOption;
 
     public enum BalanceAnswerOption {
         A, B
