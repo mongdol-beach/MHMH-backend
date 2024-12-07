@@ -22,7 +22,7 @@ public class TopicController {
 
     @Operation(summary = "상황별 토픽 리스트를 조회해옵니다.")
     @GetMapping("/situation/{situation}")
-    public TopicReadListRs readTopicBySituation(@PathVariable String situation, @RequestParam(required = false) int count) {
+    public TopicReadListRs readTopicBySituation(@PathVariable String situation, @RequestParam(required = false) Integer count) {
         return topicService.readTopicList(5);
     }
 }
