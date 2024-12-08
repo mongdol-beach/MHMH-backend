@@ -9,6 +9,12 @@ INSERT INTO situation values ('COUPLE', '커플', '5881F3', 'FFFFFF');
 -- topic insert
 START TRANSACTION;
 
+-- INSERT INTO topic VALUES (1, '질문입니다.', 'DATE');
+-- INSERT INTO topic_tip (title, topic_id) VALUES ('소제목 1입니다.', LAST_INSERT_ID());
+-- INSERT INTO topic_tip_contents (contents, c_topic_tip_id)
+-- VALUES ('Tip Content 1', LAST_INSERT_ID()),
+--        ('Tip Content 2', LAST_INSERT_ID());
+
 INSERT INTO topic VALUES (1, '질문입니다.', 'DATE');
 INSERT INTO topic_tip (topic_tip_id, title, topic_id) VALUES (1, '소제목 1입니다.', 1);
 INSERT INTO topic_tip_contents (c_topic_tip_id, contents)
@@ -74,5 +80,15 @@ INSERT INTO topic_tip (topic_tip_id, title, topic_id) VALUES (13, '소제목 2�
 INSERT INTO topic_tip_contents (c_topic_tip_id, contents)
 VALUES (13, 'Tip Content 1'),
        (13, 'Tip Content 2');
+
+INSERT INTO topic VALUES (8, '언제 반했어?', 'COUPLE');
+INSERT INTO topic_tip (topic_tip_id, title, topic_id) VALUES (14, '소제목 1입니다.', 8);
+INSERT INTO topic_tip_contents (c_topic_tip_id, contents)
+VALUES (14, 'Tip Content 1'),
+       (14, 'Tip Content 2');
+INSERT INTO topic_tip (topic_tip_id, title, topic_id) VALUES (15, '소제목 2입니다.', 8);
+INSERT INTO topic_tip_contents (c_topic_tip_id, contents)
+VALUES (15, 'Tip Content 1'),
+       (15, 'Tip Content 2');
 
 END;

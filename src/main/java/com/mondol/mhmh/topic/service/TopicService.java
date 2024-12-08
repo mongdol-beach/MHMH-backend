@@ -28,9 +28,11 @@ public class TopicService {
        )).toList();
     }
 
-    // 임시 코드
     public List<TopicReadDto> readRandomTopicBySituation(int count, String situation) {
-        List<TopicEntity> topics = topicRepository.findAllBySituationType(situation).stream().limit(5).toList();
+        List<TopicEntity> topics = topicRepository.findTopicByLimitAndSituation(count, situation);
+        while(topics.size() != 5) {
+            topics = topicRepository.findTopicByLimitAndSituation(count,situation);
+        }
 
         return topics.stream().map(topic -> new TopicReadDto(
                 topic.getId(), topic.getContent(),
