@@ -1,6 +1,7 @@
 package com.mondol.mhmh.topic;
 
 import com.mondol.mhmh.topic.rqrs.AllTopicReadListRs;
+import com.mondol.mhmh.topic.rqrs.TopicReadItemRs;
 import com.mondol.mhmh.topic.rqrs.TopicReadListRs;
 import com.mondol.mhmh.topic.service.TopicService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,13 +22,15 @@ public class TopicController {
     @Operation(summary = "랜덤 토픽 리스트를 조회해옵니다.")
     @GetMapping()
     public TopicReadListRs readRandomTopic() {
-        return topicService.readTopicList(5);
+        return TopicReadListRs.of(
+                topicService.readTopicList(5).stream().map(TopicReadItemRs::from).toList()
+        );
     }
 
     @Operation(summary = "상황별 토픽 리스트를 조회해옵니다.")
     @GetMapping("/situation/{situation}")
     public TopicReadListRs readTopicBySituation(@PathVariable String situation) {
-        return topicService.readTopicList(5);
+        return topicService.readTopicList1(5);
     }
 
     @Operation(summary = "상황별 전체 토픽 리스트를 조회해옵니다.")
