@@ -4,6 +4,7 @@ import com.mondol.mhmh.topic.dto.TopicTipDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -17,6 +18,12 @@ public class TopicTipRs {
     }
 
     public static List<TopicTipRs> commonTopicRsList() {
-        return null;
+        List<TopicTipRs> topicTipRsList = new ArrayList<>();
+        List<String> s = new ArrayList<>();
+        s.add("content1");
+        s.add("content2");
+        topicTipRsList.add(new TopicTipRs("소제목 1입니다.",s));
+        topicTipRsList.add(new TopicTipRs("소제목 2입니다.",s));
+        return topicTipRsList;
     }
 }
