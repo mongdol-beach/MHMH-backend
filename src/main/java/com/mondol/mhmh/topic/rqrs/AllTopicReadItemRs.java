@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class TopicReadItemRs{
+public class AllTopicReadItemRs {
     private int id;
     private String content;
     private List<TopicTipRs> tips;

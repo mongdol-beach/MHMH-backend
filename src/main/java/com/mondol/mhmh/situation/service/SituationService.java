@@ -1,21 +1,21 @@
 package com.mondol.mhmh.situation.service;
 
-import com.mondol.mhmh.situation.rqrs.SituationReadItemRs;
-import com.mondol.mhmh.situation.rqrs.SituationReadListRs;
+import com.mondol.mhmh.situation.dto.SituationReadDto;
+import com.mondol.mhmh.situation.repository.SituationRepository;
+import com.mondol.mhmh.situation.schema.SituationEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class SituationService {
-    public SituationReadListRs readSituationList() {
-        List<SituationReadItemRs> rs = new ArrayList<>();
+    private final SituationRepository situationRepository;
 
-        rs.add(new SituationReadItemRs("DATE", "소개팅", "FFFFFF", "000000"));
+    public List<SituationReadDto> readSituationList() {
+        List<SituationEntity> situations = situationRepository.findAll();
 
-        rs.add(new SituationReadItemRs("TEST", "테스트 상황 2", "000000", "FFFFFF"));
-
-        return SituationReadListRs.of(rs);
+        return situations.stream().map(SituationReadDto::from).toList();
     }
 }

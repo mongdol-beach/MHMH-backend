@@ -5,9 +5,13 @@ spring:
     active: local
   datasource:
     driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://db:5432/mhmh
+    username: docker
+    password: docker
   jpa:
     show-sql: true
     database: postgresql
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
