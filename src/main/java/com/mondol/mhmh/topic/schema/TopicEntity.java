@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TopicEntity {
     @Id
+    @Column(name = "topic_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -24,6 +25,6 @@ public class TopicEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private SituationEntity situation;
 
-    @OneToMany(mappedBy = "id", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<TopicTipEntity> tips;
 }
