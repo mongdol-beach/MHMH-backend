@@ -8,13 +8,13 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class AllTopicReadItemRs {
+public class SituationTopicReadItemRs {
     private int id;
     private String content;
     private List<TopicTipRs> tips;
 
-    public static AllTopicReadItemRs from(TopicReadDto dto) {
-        return new AllTopicReadItemRs(
+    public static SituationTopicReadItemRs from(TopicReadDto dto) {
+        return new SituationTopicReadItemRs(
                 dto.getId(), dto.getContent(), dto.getTopicTip().stream().map(TopicTipRs::from).toList()
         );
     }
