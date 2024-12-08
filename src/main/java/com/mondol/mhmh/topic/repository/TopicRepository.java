@@ -10,4 +10,6 @@ import java.util.List;
 public interface TopicRepository extends JpaRepository<TopicEntity, Integer> {
     @Query(value = "SELECT * FROM topic TABLESAMPLE BERNOULLI(70) LIMIT :limit", nativeQuery = true)
     List<TopicEntity> findTopicByLimit(@Param("limit") int limit);
+
+    List<TopicEntity> findAllBySituationType(String type);
 }

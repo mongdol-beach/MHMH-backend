@@ -1,9 +1,12 @@
 package com.mondol.mhmh.topic.service;
 
 import com.mondol.mhmh.topic.dto.RandomTopicReadDto;
+import com.mondol.mhmh.topic.dto.TopicReadDto;
 import com.mondol.mhmh.topic.dto.TopicTipDto;
 import com.mondol.mhmh.topic.repository.TopicRepository;
-import com.mondol.mhmh.topic.rqrs.*;
+import com.mondol.mhmh.topic.rqrs.TopicReadItemRs;
+import com.mondol.mhmh.topic.rqrs.TopicReadListRs;
+import com.mondol.mhmh.topic.rqrs.TopicTipRs;
 import com.mondol.mhmh.topic.schema.TopicEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,16 +41,12 @@ public class TopicService {
         return TopicReadListRs.of(list);
     }
 
-    public AllTopicReadListRs readALlTopic(int count) {
-        List<AllTopicReadItemRs> list = new ArrayList<>();
-        List<TopicTipRs> rs = new ArrayList<>();
-        rs.add(new TopicTipRs("소제목 1", Arrays.asList("설명1", "설명2", "설명3")));
-        rs.add(new TopicTipRs("소제목 2", Arrays.asList("설명1", "설명2")));
-        list.add(new AllTopicReadItemRs(1, "기분 어때요?", rs));
-        list.add(new AllTopicReadItemRs(23, "날씨 어때요?", rs));
-        list.add(new AllTopicReadItemRs(231, "책 어때요?", rs));
-        list.add(new AllTopicReadItemRs(21, "공부 어때요?", rs));
-        list.add(new AllTopicReadItemRs(2, "인사해보세요", rs));
-        return AllTopicReadListRs.of("DATE", "소개팅", list);
+    public List<TopicReadDto> readALlTopicBySituation(String situation) {
+        List<TopicEntity> topics = topicRepository.findAllBySituationType(situation);
+
+        return topics.stream().map(topic -> new TopicReadDto(
+                topic.getId(), topic.getContent(),
+                topic.getTips().stream().map(TopicTipDto::from).toList()
+        )).toList();
     }
 }
