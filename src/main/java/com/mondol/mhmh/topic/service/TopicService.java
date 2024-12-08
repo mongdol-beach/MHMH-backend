@@ -17,9 +17,9 @@ public class TopicService {
 
     public List<RandomTopicReadDto> readRandomTopicList(int count) {
         List<TopicEntity> topics = topicRepository.findTopicByLimit(count);
-        while(topics.size() != 5) {
-            topics = topicRepository.findTopicByLimit(count);
-        }
+//        while(topics.size() != 5) {
+//            topics = topicRepository.findTopicByLimit(count);
+//        }
 
         return topics.stream().map(topic -> new RandomTopicReadDto(
                topic.getId(), topic.getContent(),
@@ -30,9 +30,9 @@ public class TopicService {
 
     public List<TopicReadDto> readRandomTopicBySituation(int count, String situation) {
         List<TopicEntity> topics = topicRepository.findTopicByLimitAndSituation(count, situation);
-        while(topics.size() != 5) {
-            topics = topicRepository.findTopicByLimitAndSituation(count,situation);
-        }
+//        while(topics.size() != 5) {
+//            topics = topicRepository.findTopicByLimitAndSituation(count,situation);
+//        }
 
         return topics.stream().map(topic -> new TopicReadDto(
                 topic.getId(), topic.getContent(),
