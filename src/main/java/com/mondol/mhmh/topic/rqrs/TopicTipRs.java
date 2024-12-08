@@ -15,4 +15,8 @@ public class TopicTipRs {
     public static TopicTipRs from(TopicTipDto dto) {
         return new TopicTipRs(dto.getTitle(), dto.getContent());
     }
+
+    public static List<TopicTipRs> commonTopicRsList() {
+        return null;
+    }
 }

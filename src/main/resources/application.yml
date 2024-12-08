@@ -9,7 +9,7 @@ spring:
     username: docker
     password: docker
   jpa:
-    show-sql: true
+    show-sql: false
     database: postgresql
     hibernate:
       ddl-auto: none

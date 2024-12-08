@@ -24,7 +24,7 @@ public class TopicService {
         return topics.stream().map(topic -> new RandomTopicReadDto(
                topic.getId(), topic.getContent(),
                topic.getSituation().getType(), topic.getSituation().getTitle(),
-               topic.getTips().stream().map(TopicTipDto::from).toList()
+               getCommonTips()
        )).toList();
     }
 
@@ -36,7 +36,8 @@ public class TopicService {
 
         return topics.stream().map(topic -> new TopicReadDto(
                 topic.getId(), topic.getContent(),
-                topic.getTips().stream().map(TopicTipDto::from).toList()
+                getCommonTips()
+//                topic.getTips().stream().map(TopicTipDto::from).toList()
         )).toList();
     }
 
@@ -45,7 +46,11 @@ public class TopicService {
 
         return topics.stream().map(topic -> new TopicReadDto(
                 topic.getId(), topic.getContent(),
-                topic.getTips().stream().map(TopicTipDto::from).toList()
+                getCommonTips()
         )).toList();
+    }
+
+    public List<TopicTipDto> getCommonTips() {
+        return null;
     }
 }
