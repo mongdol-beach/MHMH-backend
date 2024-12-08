@@ -8,6 +8,8 @@ import com.mondol.mhmh.topic.schema.TopicEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -17,9 +19,6 @@ public class TopicService {
 
     public List<RandomTopicReadDto> readRandomTopicList(int count) {
         List<TopicEntity> topics = topicRepository.findTopicByLimit(count);
-//        while(topics.size() != 5) {
-//            topics = topicRepository.findTopicByLimit(count);
-//        }
 
         return topics.stream().map(topic -> new RandomTopicReadDto(
                topic.getId(), topic.getContent(),
@@ -30,9 +29,6 @@ public class TopicService {
 
     public List<TopicReadDto> readRandomTopicBySituation(int count, String situation) {
         List<TopicEntity> topics = topicRepository.findTopicByLimitAndSituation(count, situation);
-//        while(topics.size() != 5) {
-//            topics = topicRepository.findTopicByLimitAndSituation(count,situation);
-//        }
 
         return topics.stream().map(topic -> new TopicReadDto(
                 topic.getId(), topic.getContent(),
@@ -50,7 +46,25 @@ public class TopicService {
         )).toList();
     }
 
+    // 하나의 팁만 사용하게 되면서 db에 저장하지 않도록 바꾸었습니다.
     public List<TopicTipDto> getCommonTips() {
-        return null;
+        List<TopicTipDto> dto = new ArrayList<>();
+        dto.add(new TopicTipDto(
+                "상대방의 답변을 공감하며 확장하기",
+                Arrays.asList(
+                        "반응하기: 상대의 답변에 긍정적인 리액션을 보여주세요.",
+                        "관련된 경험 공유: \"비슷한 거 해봤는데 재미있더라구요.\" 라고 말하며 공통점을 찾아가세요."
+                )
+        ));
+
+        dto.add(new TopicTipDto(
+                "관심사를 탐색하며 구체적인 질문 던지기",
+                Arrays.asList(
+                        "\"운동하신다고 했는데, 주로 어떤 운동을 하세요?\"",
+                        "\"최근 본 영화 중에 가장 재밌었던 건 뭐였어요?\""
+                )
+        ));
+
+        return dto;
     }
 }

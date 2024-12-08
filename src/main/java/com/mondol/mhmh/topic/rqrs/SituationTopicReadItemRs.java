@@ -15,7 +15,7 @@ public class SituationTopicReadItemRs {
 
     public static SituationTopicReadItemRs from(TopicReadDto dto) {
         return new SituationTopicReadItemRs(
-                dto.getId(), dto.getContent(), TopicTipRs.commonTopicRsList()
+                dto.getId(), dto.getContent(), dto.getTopicTip().stream().map(TopicTipRs::from).toList()
         );
     }
 }
