@@ -4,15 +4,10 @@ import com.mondol.mhmh.topic.dto.RandomTopicReadDto;
 import com.mondol.mhmh.topic.dto.TopicReadDto;
 import com.mondol.mhmh.topic.dto.TopicTipDto;
 import com.mondol.mhmh.topic.repository.TopicRepository;
-import com.mondol.mhmh.topic.rqrs.TopicReadItemRs;
-import com.mondol.mhmh.topic.rqrs.TopicReadListRs;
-import com.mondol.mhmh.topic.rqrs.TopicTipRs;
 import com.mondol.mhmh.topic.schema.TopicEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -20,7 +15,7 @@ import java.util.List;
 public class TopicService {
     private final TopicRepository topicRepository;
 
-    public List<RandomTopicReadDto> readTopicList(int count) {
+    public List<RandomTopicReadDto> readRandomTopicList(int count) {
         List<TopicEntity> topics = topicRepository.findTopicByLimit(count);
         while(topics.size() != 5) {
             topics = topicRepository.findTopicByLimit(count);
@@ -33,12 +28,14 @@ public class TopicService {
        )).toList();
     }
 
-    public TopicReadListRs readTopicList1(int count) {
-        List<TopicReadItemRs> list = new ArrayList<>();
-        List<TopicTipRs> rs = new ArrayList<>();
-        rs.add(new TopicTipRs("소제목 1", Arrays.asList("설명1", "설명2", "설명3")));
-        rs.add(new TopicTipRs("소제목 2", Arrays.asList("설명1", "설명2")));
-        return TopicReadListRs.of(list);
+    // 임시 코드
+    public List<TopicReadDto> readRandomTopicBySituation(int count, String situation) {
+        List<TopicEntity> topics = topicRepository.findAllBySituationType(situation).stream().limit(5).toList();
+
+        return topics.stream().map(topic -> new TopicReadDto(
+                topic.getId(), topic.getContent(),
+                topic.getTips().stream().map(TopicTipDto::from).toList()
+        )).toList();
     }
 
     public List<TopicReadDto> readALlTopicBySituation(String situation) {

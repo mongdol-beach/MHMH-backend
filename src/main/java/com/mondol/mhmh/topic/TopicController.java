@@ -1,10 +1,7 @@
 package com.mondol.mhmh.topic;
 
 import com.mondol.mhmh.situation.schema.SituationType;
-import com.mondol.mhmh.topic.rqrs.AllTopicReadItemRs;
-import com.mondol.mhmh.topic.rqrs.AllTopicReadListRs;
-import com.mondol.mhmh.topic.rqrs.TopicReadItemRs;
-import com.mondol.mhmh.topic.rqrs.TopicReadListRs;
+import com.mondol.mhmh.topic.rqrs.*;
 import com.mondol.mhmh.topic.service.TopicService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,14 +24,16 @@ public class TopicController {
     @GetMapping()
     public TopicReadListRs readRandomTopic() {
         return TopicReadListRs.of(
-                topicService.readTopicList(5).stream().map(TopicReadItemRs::from).toList()
+                topicService.readRandomTopicList(5).stream().map(TopicReadItemRs::from).toList()
         );
     }
 
-    @Operation(summary = "상황별 토픽 리스트를 조회해옵니다.")
+    @Operation(summary = "상황별 토픽 리스트를 조회해옵니다. // 기능 구현 안됨")
     @GetMapping("/situation/{situation}")
-    public TopicReadListRs readTopicBySituation(@PathVariable String situation) {
-        return topicService.readTopicList1(5);
+    public SituationTopicReadListRs readTopicBySituation(@PathVariable String situation) {
+        return SituationTopicReadListRs.of(
+                topicService.readRandomTopicBySituation(5, situation).stream().map(SituationTopicReadItemRs::from).toList()
+        );
     }
 
     @Operation(summary = "상황별 전체 토픽 리스트를 조회해옵니다.")
