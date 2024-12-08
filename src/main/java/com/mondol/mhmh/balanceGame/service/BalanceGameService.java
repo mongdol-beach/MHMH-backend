@@ -25,7 +25,8 @@ public class BalanceGameService {
         List<BalanceQuestionReadDto> allQuestions = readAllBalanceQuestion();
         // REVIEW: 만약 질문이 5개 미만이라면 예외를 발생시켜야 할까?
         Collections.shuffle(allQuestions);
-        return allQuestions.subList(0, 5);
+        int size = Math.min(allQuestions.size(), 5);
+        return allQuestions.subList(0, size);
     }
 
     public List<BalanceQuestionReadDto> readAllBalanceQuestion() {
