@@ -28,7 +28,7 @@ public class TopicController {
         );
     }
 
-    @Operation(summary = "상황별 토픽 리스트를 조회해옵니다. // 기능 구현 안됨")
+    @Operation(summary = "상황별 토픽 리스트를 조회해옵니다.")
     @GetMapping("/situation/{situation}")
     public SituationTopicReadListRs readTopicBySituation(@PathVariable String situation) {
         return SituationTopicReadListRs.of(
