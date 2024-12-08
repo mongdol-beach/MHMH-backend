@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         // 모든 경로에 대해
         registry.addMapping("/**")
-                .allowedOriginPatterns("*") // 우선 전체 허용
+                .allowedOriginPatterns("*", "https://mhmh-csmztew3i-woohyeoks-projects.vercel.app", "https://mhmh-9xuxdqn2w-woohyeoks-projects.vercel.app") // 우선 전체 허용
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
