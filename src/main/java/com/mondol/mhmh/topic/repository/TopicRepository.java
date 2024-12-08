@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface TopicRepository extends JpaRepository<TopicEntity, Integer> {
-    @Query(value = "SELECT * FROM topic TABLESAMPLE BERNOULLI(15) LIMIT :limit", nativeQuery = true)
+    @Query(value = "SELECT * FROM topic TABLESAMPLE BERNOULLI(70) LIMIT :limit", nativeQuery = true)
     List<TopicEntity> findTopicByLimit(@Param("limit") int limit);
 }
