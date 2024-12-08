@@ -1,8 +1,8 @@
 package com.mondol.mhmh.balanceGame.schema;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,6 +29,7 @@ public class BalanceAnswerEntity {
     @Column(name = "selected_option")
     private String selectedOption;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private OffsetDateTime createdAt;
 }
