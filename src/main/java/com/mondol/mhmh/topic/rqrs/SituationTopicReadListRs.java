@@ -8,5 +8,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor(staticName = "of")
 public class SituationTopicReadListRs {
+    private String situationType;
+    private String situationName;
     private List<SituationTopicReadItemRs> topics;
 }
