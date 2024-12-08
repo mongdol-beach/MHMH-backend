@@ -17,7 +17,7 @@ public class TopicReadItemRs {
 
     public static TopicReadItemRs from(RandomTopicReadDto dto) {
         return new TopicReadItemRs(
-                dto.getId(), dto.getContent(), TopicTipRs.commonTopicRsList(), dto.getSituationId(), dto.getSituationName()
+                dto.getId(), dto.getContent(), dto.getTopicTip().stream().map(TopicTipRs::from).toList(), dto.getSituationId(), dto.getSituationName()
         );
     }
 }
