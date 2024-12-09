@@ -19,11 +19,9 @@ public class TopicService {
     private final TopicRepository topicRepository;
 
     public List<RandomTopicReadDto> readRandomTopicList(int count) {
-        List<TopicEntity> topics = topicRepository.findAll();
+        List<TopicEntity> topics = topicRepository.findTopicByLimit(count);
 
-        Collections.shuffle(topics);
-
-        return topics.subList(0, Math.min(topics.size(), count)).stream().map(topic -> new RandomTopicReadDto(
+        return topics.stream().map(topic -> new RandomTopicReadDto(
                topic.getId(), topic.getContent(),
                topic.getSituation().getType(), topic.getSituation().getTitle(),
                getCommonTips()
