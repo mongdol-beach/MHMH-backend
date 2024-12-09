@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -18,9 +19,11 @@ public class TopicService {
     private final TopicRepository topicRepository;
 
     public List<RandomTopicReadDto> readRandomTopicList(int count) {
-        List<TopicEntity> topics = topicRepository.findTopicByLimit(count);
+        List<TopicEntity> topics = topicRepository.findAll();
 
-        return topics.stream().map(topic -> new RandomTopicReadDto(
+        Collections.shuffle(topics);
+
+        return topics.subList(0, Math.min(topics.size(), count)).stream().map(topic -> new RandomTopicReadDto(
                topic.getId(), topic.getContent(),
                topic.getSituation().getType(), topic.getSituation().getTitle(),
                getCommonTips()
@@ -28,9 +31,11 @@ public class TopicService {
     }
 
     public List<TopicReadDto> readRandomTopicBySituation(int count, String situation) {
-        List<TopicEntity> topics = topicRepository.findTopicByLimitAndSituation(count, situation);
+        List<TopicEntity> topics = topicRepository.findAllBySituationType(situation);
 
-        return topics.stream().map(topic -> new TopicReadDto(
+        Collections.shuffle(topics);
+
+        return topics.subList(0, Math.min(topics.size(), count)).stream().map(topic -> new TopicReadDto(
                 topic.getId(), topic.getContent(),
                 getCommonTips()
 //                topic.getTips().stream().map(TopicTipDto::from).toList()
