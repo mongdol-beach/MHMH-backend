@@ -9,4 +9,8 @@ import java.util.List;
 @AllArgsConstructor(staticName = "of")
 public class TopicReadListRs {
     private List<TopicReadItemRs> topics;
+    private int page;
+    private int size;
+    private int totalCount;
+    private int totalPage;
 }
