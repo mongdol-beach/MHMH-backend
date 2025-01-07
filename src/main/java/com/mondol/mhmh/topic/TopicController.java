@@ -4,6 +4,7 @@ import com.mondol.mhmh.situation.schema.SituationType;
 import com.mondol.mhmh.topic.rqrs.*;
 import com.mondol.mhmh.topic.service.TopicService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +18,12 @@ import java.util.List;
 public class TopicController {
     private final TopicService topicService;
 
-    @Operation(summary = "랜덤 토픽 리스트를 조회해옵니다.")
+    @Operation(summary = "랜덤 토픽 리스트를 조회해옵니다.", parameters = {
+            @Parameter(name = "page"),
+            @Parameter(name = "size")
+    })
     @GetMapping()
-    public TopicReadListRs readRandomTopic(@RequestParam() PaginationRq rq) {
-//        System.out.print(rq);
+    public TopicReadListRs readRandomTopic(@RequestParam() int page, @RequestParam int size) {
         return TopicReadListRs.of(
                 topicService.readRandomTopicList(5).stream().map(TopicReadItemRs::from).toList()
         );
