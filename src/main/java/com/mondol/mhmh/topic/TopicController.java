@@ -6,10 +6,7 @@ import com.mondol.mhmh.topic.service.TopicService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,7 +19,8 @@ public class TopicController {
 
     @Operation(summary = "랜덤 토픽 리스트를 조회해옵니다.")
     @GetMapping()
-    public TopicReadListRs readRandomTopic() {
+    public TopicReadListRs readRandomTopic(@RequestParam() PaginationRq rq) {
+//        System.out.print(rq);
         return TopicReadListRs.of(
                 topicService.readRandomTopicList(5).stream().map(TopicReadItemRs::from).toList()
         );
