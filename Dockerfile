@@ -7,7 +7,9 @@ COPY gradlew .
 COPY build.gradle .
 COPY settings.gradle .
 
-RUN ./gradlew --no-daemon dependencies
+RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN \
+    --mount=type=secret,id=SENTRY_ORG \
+    ./gradlew --no-daemon dependencies
 
 COPY src src
 
