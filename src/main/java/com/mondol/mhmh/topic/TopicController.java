@@ -1,12 +1,14 @@
 package com.mondol.mhmh.topic;
 
 import com.mondol.mhmh.situation.schema.SituationType;
+import com.mondol.mhmh.topic.dto.RandomTopicReadDto;
 import com.mondol.mhmh.topic.rqrs.*;
 import com.mondol.mhmh.topic.service.TopicService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,12 +26,14 @@ public class TopicController {
     })
     @GetMapping()
     public TopicReadListRs readRandomTopic(@RequestParam() int page, @RequestParam int size) {
+
+        Page<RandomTopicReadDto> dtos = topicService.readRandomTopicList(page, size);
         return TopicReadListRs.of(
-                topicService.readRandomTopicList(5).stream().map(TopicReadItemRs::from).toList(),
+                dtos.getContent().stream().map(TopicReadItemRs::from).toList(),
                 page,
                 size,
-                100,
-                100/size
+                (int) dtos.getTotalElements(),
+                dtos.getTotalPages() - 1
         );
     }
 

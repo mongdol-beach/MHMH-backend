@@ -6,6 +6,10 @@ import com.mondol.mhmh.topic.dto.TopicTipDto;
 import com.mondol.mhmh.topic.repository.TopicRepository;
 import com.mondol.mhmh.topic.schema.TopicEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,14 +22,27 @@ import java.util.List;
 public class TopicService {
     private final TopicRepository topicRepository;
 
-    public List<RandomTopicReadDto> readRandomTopicList(int count) {
-        List<TopicEntity> topics = topicRepository.findTopicByLimit(count);
+    public Page<RandomTopicReadDto> readRandomTopicList(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<TopicEntity> topics = topicRepository.findAll(pageable);
 
-        return topics.stream().map(topic -> new RandomTopicReadDto(
-               topic.getId(), topic.getContent(),
-               topic.getSituation().getType(), topic.getSituation().getTitle(),
-               getCommonTips()
-       )).toList();
+        List<RandomTopicReadDto> dtos = topics.getContent()
+                .stream()
+                .sorted((a, b) -> Double.compare(Math.random(), 0.5)) // 랜덤으로 섞기
+                .map(this::convertToDto)
+                .toList();
+
+        return new PageImpl<>(dtos, pageable, topics.getTotalElements());
+    }
+
+    private RandomTopicReadDto convertToDto(TopicEntity topic) {
+        return new RandomTopicReadDto(
+                topic.getId(),
+                topic.getContent(),
+                topic.getSituation().getType(),
+                topic.getSituation().getTitle(),
+                getCommonTips()
+        );
     }
 
     public List<TopicReadDto> readRandomTopicBySituation(int count, String situation) {
