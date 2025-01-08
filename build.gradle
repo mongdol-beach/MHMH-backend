@@ -43,9 +43,9 @@ sentry {
     // code as part of your stack traces in Sentry.
     includeSourceContext = true
 
-    org = System.getenv("SENTRY_ORG")
+    org = "dong-young-kim"
     projectName = "mhmh-backend"
-    authToken = System.getenv("SENTRY_AUTH_TOKEN")
+    authToken = "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"
 }
 
 tasks.named('test') {
