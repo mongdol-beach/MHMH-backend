@@ -41,7 +41,7 @@ public class TopicController {
     @GetMapping("/situation/{situation}")
     public SituationTopicReadListRs readTopicBySituation(@PathVariable SituationType situation) {
         return SituationTopicReadListRs.of(
-                situation.toString(), situation.getName(), topicService.readRandomTopicBySituation(5, situation.toString()).stream().map(SituationTopicReadItemRs::from).toList()
+                situation.toString(), situation.getName(), SituationCardColor.valueOf(situation.toString()), topicService.readRandomTopicBySituation(5, situation.toString()).stream().map(SituationTopicReadItemRs::from).toList()
         );
     }
 

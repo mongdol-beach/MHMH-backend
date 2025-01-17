@@ -14,10 +14,11 @@ public class TopicReadItemRs {
     private List<TopicTipRs> tips;
     private String situationType;
     private String situationName;
+    private SituationCardColor situationColor;
 
     public static TopicReadItemRs from(RandomTopicReadDto dto) {
         return new TopicReadItemRs(
-                dto.getId(), dto.getContent(), dto.getTopicTip().stream().map(TopicTipRs::from).toList(), dto.getSituationId(), dto.getSituationName()
+                dto.getId(), dto.getContent(), dto.getTopicTip().stream().map(TopicTipRs::from).toList(), dto.getSituationId(), dto.getSituationName(), SituationCardColor.valueOf(dto.getSituationId().toString())
         );
     }
 }

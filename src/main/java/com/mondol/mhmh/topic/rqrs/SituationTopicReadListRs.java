@@ -10,5 +10,6 @@ import java.util.List;
 public class SituationTopicReadListRs {
     private String situationType;
     private String situationName;
+    private SituationCardColor situationColor;
     private List<SituationTopicReadItemRs> topics;
 }

@@ -11,9 +11,10 @@ import java.util.List;
 public class AllTopicReadListRs {
     private SituationType situationId;
     private String situationName;
+    private SituationCardColor situationColor;
     private List<AllTopicReadItemRs> topics;
 
     public static  AllTopicReadListRs of(SituationType situation, List<AllTopicReadItemRs> topic) {
-        return new AllTopicReadListRs(situation, situation.getName(), topic);
+        return new AllTopicReadListRs(situation, situation.getName(), SituationCardColor.valueOf(situation.toString()), topic);
     }
 }
