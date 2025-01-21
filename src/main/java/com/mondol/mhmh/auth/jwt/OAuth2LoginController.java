@@ -15,6 +15,7 @@ public class OAuth2LoginController {
 
     @GetMapping("/login/oauth2/code/kakao")
     public TokenRs kakaoLogin(@RequestParam String code) {
+        System.out.println(code + "왜 여기 안와...");
         return kakaoService.getAccessToken(code);
     }
 }
