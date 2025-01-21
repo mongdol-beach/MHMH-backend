@@ -9,15 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController()
-public class KakaoLoginController {
+public class OAuth2LoginController {
     private final CustomOAuth2UserService service;
     private final KaKaoOAuthService kakaoService;
+
     @GetMapping("/login/oauth2/code/kakao")
-    public String kakaoLogin(@RequestParam String code) {
-        kakaoService.getAccessToken(code);
-        System.out.println("여기오지않아여.." + code);
-        return service.a(code);
-//        String accessToken = kakaoApi.getAccessToken(code);
-//        String accessToken = kakaoApi.getAccessToken(code);
+    public TokenRs kakaoLogin(@RequestParam String code) {
+        return kakaoService.getAccessToken(code);
     }
 }
