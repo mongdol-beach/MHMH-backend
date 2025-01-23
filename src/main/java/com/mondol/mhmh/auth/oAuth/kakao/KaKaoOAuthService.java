@@ -1,10 +1,9 @@
-package com.mondol.mhmh.auth.oAuth;
+package com.mondol.mhmh.auth.oAuth.kakao;
 
 
 import com.mondol.mhmh.auth.jwt.JwtUtil;
 import com.mondol.mhmh.auth.jwt.TokenRs;
-import com.mondol.mhmh.auth.oAuth.kakao.KakaoTokenBody;
-import com.mondol.mhmh.auth.oAuth.kakao.KakaoUserInfoBody;
+import com.mondol.mhmh.auth.oAuth.LoginType;
 import com.mondol.mhmh.user.repository.UserRepository;
 import com.mondol.mhmh.user.schema.UserEntity;
 import lombok.RequiredArgsConstructor;

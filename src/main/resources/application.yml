@@ -35,3 +35,10 @@ spring:
               - profile_nickname
               - profile_image
               - account_email
+
+auth:
+  jwt:
+    secret: ${JWT_SECRET_KEY}
+    exp:
+      access: 1000000
+      refresh: 30000000
