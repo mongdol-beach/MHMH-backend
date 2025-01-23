@@ -39,7 +39,7 @@ public class KaKaoOAuthService {
         MultiValueMap<String, String> bodyParams = new LinkedMultiValueMap<>();
         bodyParams.set("grant_type", "authorization_code");
         bodyParams.set("client_id", clientId);
-        bodyParams.set("redirect_uri", "http://localhost:8080/login/oauth2/code/kakao");
+        bodyParams.set("redirect_uri", redirectUri);
         bodyParams.set("code", authorizationCode); // add로 하면 []에 감싸져서 들어감
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(bodyParams, headers);
 
