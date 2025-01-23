@@ -1,11 +1,15 @@
 package com.mondol.mhmh.auth.jwt;
 
+import com.mondol.mhmh.auth.principal.PrincipalDetail;
+import com.mondol.mhmh.auth.principal.PrincipalUserDetailsService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -27,6 +31,8 @@ public class JwtUtil {
     private final String HEADER = "Authorization";
 
     private final String PREFIX = "Bearer ";
+
+    private final PrincipalUserDetailsService principalUserDetailsService;
 
     private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -81,6 +87,10 @@ public class JwtUtil {
             throw new RuntimeException(e);
 //            throw new InvalidTokenException();
         }
+    }
+    public Authentication getAuthentication(String token) {
+       PrincipalDetail authDetails = principalUserDetailsService.loadUserByUsername(getId(token));
+        return new UsernamePasswordAuthenticationToken(authDetails, "", authDetails.getAuthorities());
     }
 
 }
