@@ -1,10 +1,11 @@
 package com.mondol.mhmh.auth.oAuth;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mondol.mhmh.auth.jwt.TokenRs;
 import com.mondol.mhmh.auth.oAuth.kakao.KakaoTokenBody;
-import com.mondol.mhmh.auth.oAuth.kakao.KakaoTokenPayload;
+import com.mondol.mhmh.auth.oAuth.kakao.KakaoUserInfoBody;
+import com.mondol.mhmh.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -12,9 +13,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
-
+@RequiredArgsConstructor
 @Service
 public class KaKaoOAuthService {
 
@@ -24,11 +23,12 @@ public class KaKaoOAuthService {
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
     private String redirectUri;
 
-    private String kakaoTokenUri = "https://kauth.kakao.com/oauth/token";
-    private String kakaoUserInfo ="https://kapi.kakao.com/v2/user/me"; // 사용자 정보 가져오기
+    private final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
+    private final String KAKAO_USER_INFO_URL ="https://kapi.kakao.com/v2/user/me"; // 사용자 정보 가져오기
+
+    private final UserRepository userRepository;
 
     public TokenRs getAccessToken(String authorizationCode) {
-        System.out.print("hereeee");
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -43,13 +43,13 @@ public class KaKaoOAuthService {
 
 
         // kakao 토큰 값
-        ResponseEntity<KakaoTokenBody> response = restTemplate.postForEntity(kakaoTokenUri, requestEntity, KakaoTokenBody.class);
+        ResponseEntity<KakaoTokenBody> response = restTemplate.postForEntity(KAKAO_TOKEN_URL, requestEntity, KakaoTokenBody.class);
 
 
-        System.out.print(response.getBody().getIdToken());
-        response.getBody().getAccessToken();
+        KakaoUserInfoBody userInfo = getInfo(response.getBody().getAccessToken());
 
-        getInfo(response.getBody().getAccessToken());
+        System.out.println(userInfo.getKakao_account().getEmail());
+
         // payload로 유저 생성
 
         // payload의 nickname, email, user id 넣어서, kakao sub 넣어서 토큰 생성
@@ -57,60 +57,27 @@ public class KaKaoOAuthService {
         return TokenRs.of("","");
     }
 
-    private String getInfo(String token) {
+    private KakaoUserInfoBody getInfo(String token) {
         HttpHeaders headers = new HttpHeaders();
         // Content-type을 application/x-www-form-urlencoded 로 설정
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        String access_token = token;
-        String userInfoURL = "https://kapi.kakao.com/v2/user/me";
-// Header에 access_token 삽입
-        headers.set("Authorization", "Bearer "+access_token);
+        headers.setContentType(MediaType.valueOf("application/x-www-form-urlencoded;charset=utf-8"));
 
-// Request entity 생성
-        HttpEntity<?> userInfoEntity = new HttpEntity<>(headers);
+        headers.set("Authorization", "Bearer "+token);
 
-// Post 방식으로 Http 요청
-// 응답 데이터 형식은 Hashmap 으로 지정
+        System.out.print(headers);
+        HttpEntity<MultiValueMap<String,String>> kakaoProfileRequest = new HttpEntity <>(headers);
+
+
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<HashMap> userResult = restTemplate.postForEntity(userInfoURL, userInfoEntity, HashMap.class);
-        Map<String, String> userResultMap = userResult.getBody();
-        System.out.println(userResultMap+ "맵입니다");
-        return "";
+        ResponseEntity<KakaoUserInfoBody> userResult = restTemplate.exchange(
+                KAKAO_USER_INFO_URL,
+                HttpMethod.GET,
+                kakaoProfileRequest,
+                KakaoUserInfoBody.class
+        );
+
+        System.out.println(userResult+ "맵입니다");
+        return userResult.getBody();
     }
 
-    private KakaoTokenPayload decodePayload(String jwtToken) throws Exception {
-        System.out.println(jwtToken + "asdfasd token입니당");
-        // 1. JWT 토큰을 '.' 기준으로 분리
-//        String[] parts = jwtToken.split("\\.");
-//        if (parts.length != 3) {
-//            throw new IllegalArgumentException("Invalid JWT token format.");
-//        }
-//
-//        // 2. payload 부분(Base64로 인코딩된 부분) 추출
-//        String payload = parts[1]; // 그냥 token 자체가 페이로드인가?
-
-        // 3. Base64 디코딩
-//        String decodedPayload = new String(Base64.getDecoder().decode(jwtToken));
-
-        // 4. JSON을 KakaoTokenPayload 객체로 변환
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(jwtToken, KakaoTokenPayload.class);
-    }
-
-    public Map<String, Object> getUserInfo(String accessToken) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(accessToken);
-
-        HttpEntity<Void> request = new HttpEntity<>(headers);
-
-        ResponseEntity<Map> response = restTemplate.exchange(kakaoTokenUri, HttpMethod.GET, request, Map.class);
-
-        if (response.getStatusCode() == HttpStatus.OK) {
-            return response.getBody();
-        } else {
-            throw new RuntimeException("Failed to fetch user information");
-        }
-    }
 }
