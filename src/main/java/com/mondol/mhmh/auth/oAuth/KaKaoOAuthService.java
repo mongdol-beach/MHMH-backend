@@ -1,6 +1,7 @@
 package com.mondol.mhmh.auth.oAuth;
 
 
+import com.mondol.mhmh.auth.jwt.JwtUtil;
 import com.mondol.mhmh.auth.jwt.TokenRs;
 import com.mondol.mhmh.auth.oAuth.kakao.KakaoTokenBody;
 import com.mondol.mhmh.auth.oAuth.kakao.KakaoUserInfoBody;
@@ -28,6 +29,7 @@ public class KaKaoOAuthService {
     private final String KAKAO_USER_INFO_URL ="https://kapi.kakao.com/v2/user/me"; // 사용자 정보 가져오기
 
     private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
     public TokenRs getAccessToken(String authorizationCode) {
         RestTemplate restTemplate = new RestTemplate();
@@ -46,18 +48,17 @@ public class KaKaoOAuthService {
         // kakao 토큰 값
         ResponseEntity<KakaoTokenBody> response = restTemplate.postForEntity(KAKAO_TOKEN_URL, requestEntity, KakaoTokenBody.class);
 
-
         KakaoUserInfoBody userInfo = getInfo(response.getBody().getAccessToken());
 
-        // payload로 유저 생성
-        UserEntity userEntity = UserEntity.from(LoginType.KAKAO.getIdPre()+userInfo.getId(),userInfo.getName(), userInfo.getEmail(), userInfo.getProfileUrl(), LoginType.KAKAO);
+        String id = LoginType.KAKAO.getIdPre()+userInfo.getId();
+        if(userRepository.findById(id).isEmpty()) {
+            userRepository.save(UserEntity.from(id,userInfo.getName(), userInfo.getEmail(), userInfo.getProfileUrl(), LoginType.KAKAO));
+        }
 
-        System.out.print(userEntity);
-        // 없다면 세이브
-        userRepository.save(userEntity);
-        // payload의 nickname, email, user id 넣어서, kakao sub 넣어서 토큰 생성
+        String accessToken = jwtUtil.generateAccessToken(id, userInfo.getEmail());
+        String refreshToken = jwtUtil.generateRefreshToken(id);
 
-        return TokenRs.of("","");
+        return TokenRs.of(accessToken, refreshToken);
     }
 
     private KakaoUserInfoBody getInfo(String token) {
