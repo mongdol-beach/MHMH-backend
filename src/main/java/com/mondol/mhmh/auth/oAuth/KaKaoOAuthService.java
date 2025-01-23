@@ -5,6 +5,7 @@ import com.mondol.mhmh.auth.jwt.TokenRs;
 import com.mondol.mhmh.auth.oAuth.kakao.KakaoTokenBody;
 import com.mondol.mhmh.auth.oAuth.kakao.KakaoUserInfoBody;
 import com.mondol.mhmh.user.repository.UserRepository;
+import com.mondol.mhmh.user.schema.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -48,10 +49,12 @@ public class KaKaoOAuthService {
 
         KakaoUserInfoBody userInfo = getInfo(response.getBody().getAccessToken());
 
-        System.out.println(userInfo.getKakao_account().getEmail());
-
         // payload로 유저 생성
+        UserEntity userEntity = UserEntity.from(LoginType.KAKAO.getIdPre()+userInfo.getId(),userInfo.getName(), userInfo.getEmail(), userInfo.getProfileUrl(), LoginType.KAKAO);
 
+        System.out.print(userEntity);
+        // 없다면 세이브
+        userRepository.save(userEntity);
         // payload의 nickname, email, user id 넣어서, kakao sub 넣어서 토큰 생성
 
         return TokenRs.of("","");

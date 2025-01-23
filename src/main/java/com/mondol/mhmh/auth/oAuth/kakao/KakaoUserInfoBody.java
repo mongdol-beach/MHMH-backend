@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 // https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#kakaoaccount
 public class KakaoUserInfoBody {
-            private Long id;
+            private Long id; // 회원번호
             private String connected_at;
             private KakaoAccount kakao_account;
 
@@ -32,6 +32,16 @@ public class KakaoUserInfoBody {
                     private String profile_image_url;
                     private String thumbnail_image_url;
                 }
+            }
+
+            public String getName() {
+                return this.kakao_account.profile.nickname;
+            }
+            public String getEmail() {
+                return this.kakao_account.email;
+            }
+            public String getProfileUrl() {
+                return this.kakao_account.profile.profile_image_url;
             }
 
     }
