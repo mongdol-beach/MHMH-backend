@@ -18,7 +18,7 @@ public class OAuth2LoginController {
         return kakaoService.getAccessToken(code);
     }
 
-    @GetMapping("/login/oauth2/code/kakao")
+    @GetMapping("/login/oauth2/code/naver")
     public TokenRs naverLogin(@RequestParam String code) {
         return kakaoService.getAccessToken(code);
     }
