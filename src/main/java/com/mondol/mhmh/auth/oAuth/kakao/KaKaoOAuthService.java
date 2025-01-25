@@ -4,6 +4,7 @@ package com.mondol.mhmh.auth.oAuth.kakao;
 import com.mondol.mhmh.auth.jwt.JwtUtil;
 import com.mondol.mhmh.auth.jwt.TokenRs;
 import com.mondol.mhmh.auth.oAuth.LoginType;
+import com.mondol.mhmh.exception.CustomException;
 import com.mondol.mhmh.user.repository.UserRepository;
 import com.mondol.mhmh.user.schema.UserEntity;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,9 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @RequiredArgsConstructor
@@ -25,62 +29,83 @@ public class KaKaoOAuthService {
     private String redirectUri;
 
     private final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
-    private final String KAKAO_USER_INFO_URL ="https://kapi.kakao.com/v2/user/me"; // 사용자 정보 가져오기
+    private final String KAKAO_USER_INFO_URL = "https://kapi.kakao.com/v2/user/me"; // 사용자 정보 가져오기
 
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
     public TokenRs getAccessToken(String authorizationCode) {
-        RestTemplate restTemplate = new RestTemplate();
+        try {
+            RestTemplate restTemplate = new RestTemplate();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        MultiValueMap<String, String> bodyParams = new LinkedMultiValueMap<>();
-        bodyParams.set("grant_type", "authorization_code");
-        bodyParams.set("client_id", clientId);
-        bodyParams.set("redirect_uri", redirectUri);
-        bodyParams.set("code", authorizationCode); // add로 하면 []에 감싸져서 들어감
-        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(bodyParams, headers);
+            MultiValueMap<String, String> bodyParams = new LinkedMultiValueMap<>();
+            bodyParams.set("grant_type", "authorization_code");
+            bodyParams.set("client_id", clientId);
+            bodyParams.set("redirect_uri", redirectUri);
+            bodyParams.set("code", authorizationCode);
 
+            HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(bodyParams, headers);
 
-        // kakao 토큰 값
-        ResponseEntity<KakaoTokenBody> response = restTemplate.postForEntity(KAKAO_TOKEN_URL, requestEntity, KakaoTokenBody.class);
+            // 카카오 토큰 요청
+            ResponseEntity<KakaoTokenBody> response = restTemplate.postForEntity(KAKAO_TOKEN_URL, requestEntity, KakaoTokenBody.class);
 
-        KakaoUserInfoBody userInfo = getInfo(response.getBody().getAccessToken());
+            KakaoUserInfoBody userInfo = getInfo(response.getBody().getAccessToken());
 
-        String id = LoginType.KAKAO.getIdPre()+userInfo.getId();
-        if(userRepository.findById(id).isEmpty()) {
-            userRepository.save(UserEntity.from(id,userInfo.getName(), userInfo.getEmail(), userInfo.getProfileUrl(), LoginType.KAKAO));
+            String id = LoginType.KAKAO.getIdPre() + userInfo.getId();
+            if (userRepository.findById(id).isEmpty()) {
+                userRepository.save(UserEntity.from(id, userInfo.getName(), userInfo.getEmail(), userInfo.getProfileUrl(), LoginType.KAKAO));
+            }
+
+            String accessToken = jwtUtil.generateAccessToken(id, userInfo.getEmail());
+            String refreshToken = jwtUtil.generateRefreshToken(id);
+
+            return TokenRs.of(accessToken, refreshToken);
+        } catch (HttpClientErrorException e) {
+            // 클라이언트 요청 문제 (4xx)
+            throw new CustomException("클라이언트 요청 에러: " + e.getResponseBodyAsString(), e);
+        } catch (HttpServerErrorException e) {
+            // 서버 문제 (5xx)
+            throw new CustomException("서버 에러: " + e.getResponseBodyAsString(), e);
+        } catch (RestClientException e) {
+            // 기타 RestTemplate 에러
+            throw new CustomException("RestTemplate 처리 중 에러: " + e.getMessage(), e);
+        } catch (Exception e) {
+            // 기타 예외
+            throw new CustomException("예기치 못한 에러 발생: " + e.getMessage(), e);
         }
-
-        String accessToken = jwtUtil.generateAccessToken(id, userInfo.getEmail());
-        String refreshToken = jwtUtil.generateRefreshToken(id);
-
-        return TokenRs.of(accessToken, refreshToken);
     }
 
     private KakaoUserInfoBody getInfo(String token) {
-        HttpHeaders headers = new HttpHeaders();
-        // Content-type을 application/x-www-form-urlencoded 로 설정
-        headers.setContentType(MediaType.valueOf("application/x-www-form-urlencoded;charset=utf-8"));
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            headers.set("Authorization", "Bearer " + token);
 
-        headers.set("Authorization", "Bearer "+token);
+            HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers);
 
-        System.out.print(headers);
-        HttpEntity<MultiValueMap<String,String>> kakaoProfileRequest = new HttpEntity <>(headers);
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<KakaoUserInfoBody> userResult = restTemplate.exchange(
+                    KAKAO_USER_INFO_URL,
+                    HttpMethod.GET,
+                    kakaoProfileRequest,
+                    KakaoUserInfoBody.class
+            );
+
+            return userResult.getBody();
+        } catch (HttpClientErrorException e) {
+            throw new CustomException("클라이언트 요청 에러 (사용자 정보): " + e.getResponseBodyAsString(), e);
+        } catch (HttpServerErrorException e) {
+            throw new CustomException("서버 에러 (사용자 정보): " + e.getResponseBodyAsString(), e);
+        } catch (RestClientException e) {
+            throw new CustomException("RestTemplate 처리 중 에러 (사용자 정보): " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new CustomException("예기치 못한 에러 발생: " + e.getMessage(), e);
+        }
 
 
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<KakaoUserInfoBody> userResult = restTemplate.exchange(
-                KAKAO_USER_INFO_URL,
-                HttpMethod.GET,
-                kakaoProfileRequest,
-                KakaoUserInfoBody.class
-        );
-
-        System.out.println(userResult+ "맵입니다");
-        return userResult.getBody();
     }
 
 }
