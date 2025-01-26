@@ -2,7 +2,6 @@ package com.mondol.mhmh.auth.oAuth.kakao;
 
 
 import com.mondol.mhmh.auth.jwt.JwtUtil;
-import com.mondol.mhmh.auth.jwt.TokenRs;
 import com.mondol.mhmh.auth.oAuth.LoginType;
 import com.mondol.mhmh.exception.CustomException;
 import com.mondol.mhmh.user.repository.UserRepository;
@@ -17,6 +16,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
+import java.net.URI;
 
 @RequiredArgsConstructor
 @Service
@@ -34,7 +35,7 @@ public class KaKaoOAuthService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-    public TokenRs getAccessToken(String authorizationCode) {
+    public ResponseEntity<Void> getAccessToken(String authorizationCode) {
         try {
             RestTemplate restTemplate = new RestTemplate();
 
@@ -62,7 +63,15 @@ public class KaKaoOAuthService {
             String accessToken = jwtUtil.generateAccessToken(id, userInfo.getEmail());
             String refreshToken = jwtUtil.generateRefreshToken(id);
 
-            return TokenRs.of(accessToken, refreshToken);
+            URI redirectUri = URI.create("http://localhost:5173/login/kakao");
+
+            // 헤더 설정
+            HttpHeaders headers2 = new HttpHeaders();
+            headers2.setLocation(redirectUri); // 리디렉션 URL 설정
+            headers2.add(HttpHeaders.SET_COOKIE, createCookie("accessToken", accessToken, 3600, true)); // 쿠키 설정
+            headers2.add(HttpHeaders.SET_COOKIE, createCookie("refreshToken", refreshToken, 604800, true));
+
+            return new ResponseEntity<>(headers2, HttpStatus.PERMANENT_REDIRECT);
         } catch (HttpClientErrorException e) {
             // 클라이언트 요청 문제 (4xx)
             throw new CustomException("클라이언트 요청 에러: " + e.getResponseBodyAsString(), e);
@@ -76,6 +85,10 @@ public class KaKaoOAuthService {
             // 기타 예외
             throw new CustomException("예기치 못한 에러 발생: " + e.getMessage(), e);
         }
+    }
+    private String createCookie(String name, String value, int maxAge, boolean httpOnly) {
+        return String.format("%s=%s; Max-Age=%d; Path=/; %s",
+                name, value, maxAge, httpOnly ? "HttpOnly; Secure" : "");
     }
 
     private KakaoUserInfoBody getInfo(String token) {
@@ -104,8 +117,6 @@ public class KaKaoOAuthService {
         } catch (Exception e) {
             throw new CustomException("예기치 못한 에러 발생: " + e.getMessage(), e);
         }
-
-
     }
 
 }
