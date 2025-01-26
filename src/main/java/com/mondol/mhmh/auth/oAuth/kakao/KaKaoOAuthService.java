@@ -68,8 +68,8 @@ public class KaKaoOAuthService {
             // 헤더 설정
             HttpHeaders headers2 = new HttpHeaders();
             headers2.setLocation(redirectUri); // 리디렉션 URL 설정
-            headers2.add(HttpHeaders.SET_COOKIE, createCookie("accessToken", accessToken, 3600, true)); // 쿠키 설정
-            headers2.add(HttpHeaders.SET_COOKIE, createCookie("refreshToken", refreshToken, 604800, true));
+            headers2.add(HttpHeaders.SET_COOKIE, createCookie("accessToken", accessToken, 3600, false)); // 쿠키 설정
+            headers2.add(HttpHeaders.SET_COOKIE, createCookie("refreshToken", refreshToken, 604800, false));
 
             return new ResponseEntity<>(headers2, HttpStatus.PERMANENT_REDIRECT);
         } catch (HttpClientErrorException e) {
