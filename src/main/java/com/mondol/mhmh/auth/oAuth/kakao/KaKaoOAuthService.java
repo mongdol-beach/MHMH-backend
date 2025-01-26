@@ -63,7 +63,7 @@ public class KaKaoOAuthService {
             String accessToken = jwtUtil.generateAccessToken(id, userInfo.getEmail());
             String refreshToken = jwtUtil.generateRefreshToken(id);
 
-            URI redirectUri = URI.create("http://localhost:5173/login/kakao");
+            URI redirectUri = URI.create("http://localhost:5173");
 
             // 헤더 설정
             HttpHeaders headers2 = new HttpHeaders();
