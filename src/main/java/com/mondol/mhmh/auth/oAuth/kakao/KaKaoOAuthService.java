@@ -87,7 +87,7 @@ public class KaKaoOAuthService {
         }
     }
     private String createCookie(String name, String value, int maxAge, boolean httpOnly) {
-        return String.format("%s=%s; Max-Age=%d; Path=/; %s",
+        return String.format("%s=%s;Max-Age=%d;Path=/;SameSite=None;%s",
                 name, value, maxAge, httpOnly ? "HttpOnly; Secure" : "");
     }
 
