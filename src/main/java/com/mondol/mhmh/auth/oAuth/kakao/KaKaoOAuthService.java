@@ -2,6 +2,7 @@ package com.mondol.mhmh.auth.oAuth.kakao;
 
 
 import com.mondol.mhmh.auth.jwt.JwtUtil;
+import com.mondol.mhmh.auth.jwt.TokenRs;
 import com.mondol.mhmh.auth.oAuth.LoginType;
 import com.mondol.mhmh.exception.CustomException;
 import com.mondol.mhmh.user.repository.UserRepository;
@@ -71,7 +72,7 @@ public class KaKaoOAuthService {
             headers2.add(HttpHeaders.SET_COOKIE, createCookie("accessToken", accessToken, 3600, false)); // 쿠키 설정
             headers2.add(HttpHeaders.SET_COOKIE, createCookie("refreshToken", refreshToken, 604800, false));
 
-            return new ResponseEntity<>(headers2, HttpStatus.PERMANENT_REDIRECT);
+            return new ResponseEntity<>(headers2, HttpStatus.FOUND);
         } catch (HttpClientErrorException e) {
             // 클라이언트 요청 문제 (4xx)
             throw new CustomException("클라이언트 요청 에러: " + e.getResponseBodyAsString(), e);
