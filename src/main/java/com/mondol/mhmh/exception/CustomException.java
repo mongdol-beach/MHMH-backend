@@ -25,7 +25,7 @@ public class CustomException extends RuntimeException {
     public CustomException(String message, Throwable cause) {
         super(message, cause);
         this.message = message;
-        this.statusCode = 500; // 기본적으로 500 에러로 설정
+        this.statusCode = 400; // 기본적으로 500 에러로 설정
     }
 
     // 상태 코드, 메시지, 예외를 받는 생성자
