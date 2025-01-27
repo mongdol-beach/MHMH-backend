@@ -2,11 +2,14 @@ package com.mondol.mhmh.auth.oAuth.kakao;
 
 
 import com.mondol.mhmh.auth.jwt.JwtUtil;
+import com.mondol.mhmh.auth.jwt.TokenRs;
 import com.mondol.mhmh.auth.oAuth.LoginType;
 import com.mondol.mhmh.exception.CustomException;
 import com.mondol.mhmh.user.repository.UserRepository;
 import com.mondol.mhmh.user.schema.UserEntity;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -17,17 +20,16 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
-
 @RequiredArgsConstructor
 @Service
+@Log4j2
 public class KaKaoOAuthService {
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
 
-    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
-    private String redirectUri;
+//    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
+//    private String redirectUri;
 
     private final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
     private final String KAKAO_USER_INFO_URL = "https://kapi.kakao.com/v2/user/me"; // 사용자 정보 가져오기
@@ -35,9 +37,23 @@ public class KaKaoOAuthService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-    public ResponseEntity<Void> getAccessToken(String authorizationCode) {
+    public TokenRs getAccessToken(String authorizationCode, HttpServletRequest request) {
         try {
             RestTemplate restTemplate = new RestTemplate();
+            String host = request.getHeader("Host");
+            String redirectUri = "";
+            log.debug(host+ " :request host");
+            if (host.contains("localhost:5173")) {
+                // 로컬 환경
+                redirectUri = "http://localhost:5173/login/kakao";
+            } else if (host.contains("localhost:8080")) {
+                redirectUri = "http://localhost:8080/login/oauth2/code/kakao/test";
+            } else if(host.contains("mh-mh.vercel.app")){
+                // 프로덕션 환경
+                redirectUri = "https://mh-mh.vercel.app/login/kakao";
+            }  else {
+                throw new CustomException("허용된 host가 아닙니다.");
+            }
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -63,16 +79,7 @@ public class KaKaoOAuthService {
             String accessToken = jwtUtil.generateAccessToken(id, userInfo.getEmail());
             String refreshToken = jwtUtil.generateRefreshToken(id);
 
-            URI redirectUri = URI.create("http://localhost:5173");
-
-            // 헤더 설정
-            HttpHeaders headers2 = new HttpHeaders();
-            headers2.add("Access-Control-Allow-Credentials", "true");
-            headers2.setLocation(redirectUri); // 리디렉션 URL 설정
-            headers2.add(HttpHeaders.SET_COOKIE, createCookie("accessToken", accessToken, 3600, true));
-            headers2.add(HttpHeaders.SET_COOKIE, createCookie("refreshToken", refreshToken, 604800, false));
-
-            return new ResponseEntity<>(headers2, HttpStatus.FOUND);
+            return TokenRs.of(accessToken, refreshToken);
         } catch (HttpClientErrorException e) {
             // 클라이언트 요청 문제 (4xx)
             throw new CustomException("클라이언트 요청 에러: " + e.getResponseBodyAsString(), e);

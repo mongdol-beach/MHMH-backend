@@ -2,21 +2,21 @@ package com.mondol.mhmh.auth.jwt;
 
 import com.mondol.mhmh.auth.oAuth.kakao.KaKaoOAuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController()
-@Tag(name = "OAuth API", description = "OAuth2 리다이렉트 API입니다")
+@Tag(name = "OAuth API", description = "OAuth2 API입니다")
 public class OAuth2LoginController {
     private final KaKaoOAuthService kakaoService;
 
     @GetMapping("/login/oauth2/code/kakao")
-    public ResponseEntity<Void> kakaoLogin(@RequestParam String code) {
-        return kakaoService.getAccessToken(code);
+    public TokenRs kakaoLogin(@RequestParam String code, HttpServletRequest request) {
+        return kakaoService.getAccessToken(code, request);
     }
 
 //    @GetMapping("/login/oauth2/code/naver")
@@ -24,7 +24,7 @@ public class OAuth2LoginController {
 //        return kakaoService.getAccessToken(code);
 //    }
 
-    @GetMapping("/login/oauth2/code/kakao/2")
+    @GetMapping("/login/oauth2/code/kakao/test")
     public String kakaoLoginTest(@RequestParam String code) {
         return code;
     }
