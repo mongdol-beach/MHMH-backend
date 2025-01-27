@@ -2,7 +2,6 @@ package com.mondol.mhmh.auth.oAuth.kakao;
 
 
 import com.mondol.mhmh.auth.jwt.JwtUtil;
-import com.mondol.mhmh.auth.jwt.TokenRs;
 import com.mondol.mhmh.auth.oAuth.LoginType;
 import com.mondol.mhmh.exception.CustomException;
 import com.mondol.mhmh.user.repository.UserRepository;
@@ -70,7 +69,7 @@ public class KaKaoOAuthService {
             HttpHeaders headers2 = new HttpHeaders();
             headers2.add("Access-Control-Allow-Credentials", "true");
             headers2.setLocation(redirectUri); // 리디렉션 URL 설정
-            headers2.add(HttpHeaders.SET_COOKIE, createCookie("accessToken", accessToken, 3600, false));
+            headers2.add(HttpHeaders.SET_COOKIE, createCookie("accessToken", accessToken, 3600, true));
             headers2.add(HttpHeaders.SET_COOKIE, createCookie("refreshToken", refreshToken, 604800, false));
 
             return new ResponseEntity<>(headers2, HttpStatus.FOUND);
@@ -93,9 +92,9 @@ public class KaKaoOAuthService {
         cookie.append(name).append("=").append(value).append(";");
         cookie.append("Max-Age=").append(maxAge).append(";");
         cookie.append("Path=/;");
-        cookie.append("Domain=localhost:5173;");
-        cookie.append("Secure;");
-        cookie.append("SameSite=None;");
+        cookie.append("Domain=localhost;");
+//        cookie.append("Secure;");
+        cookie.append("SameSite=Lax;");
         if (httpOnly) {
             cookie.append(" HttpOnly;");
         }

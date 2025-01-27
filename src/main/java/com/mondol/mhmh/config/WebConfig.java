@@ -14,7 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOriginPatterns("*", "https://mhmh-csmztew3i-woohyeoks-projects.vercel.app", "https://mhmh-9xuxdqn2w-woohyeoks-projects.vercel.app") // 우선 전체 허용
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
-                .allowCredentials(true);
+                .allowCredentials(true).maxAge(360000);
     }
 
 }
