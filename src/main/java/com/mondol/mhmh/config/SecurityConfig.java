@@ -18,19 +18,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/swagger-ui").permitAll()
-                .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/swagger-resources/**").permitAll()
-                        .requestMatchers("/v3/api-docs/**").permitAll()
-                .requestMatchers("/login/oauth2/code/kakao").permitAll()
-                        .requestMatchers("/login/**").permitAll()
+        http
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/swagger-ui", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/login/oauth2/code/kakao", "/login/**").permitAll()
                         .requestMatchers("/hello/token").authenticated()
-
-                                .requestMatchers("/**").permitAll()
+                        .anyRequest().permitAll()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 }
