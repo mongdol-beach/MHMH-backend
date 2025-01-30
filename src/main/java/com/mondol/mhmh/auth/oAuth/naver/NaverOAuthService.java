@@ -41,7 +41,7 @@ public class NaverOAuthService {
 
     public TokenRs getAccessToken(String authorizationCode, HttpServletRequest request) {
 
-        String redirectURI = getRedirectURI(request.getHeader("Host"));
+        String redirectURI = getRedirectURI(request.getHeader("Origin"));
 
         NaverTokenBody tokenRs = getToken(authorizationCode, redirectURI);
         if(tokenRs.getError() != null) {
