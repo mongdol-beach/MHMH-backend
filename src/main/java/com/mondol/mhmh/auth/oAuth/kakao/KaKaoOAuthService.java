@@ -44,7 +44,7 @@ public class KaKaoOAuthService {
 //            String host = request.getRequestURL().toString();
 
 //            String host = request.getServerName() + ":" + request.getServerPort();
-            String host = request.getHeader("ORIGIN");
+            String host = request.getHeader("Origin");
             log.debug(host+ " :request host");
             if (host.contains("localhost:5173")) {
                 // 로컬 환경
