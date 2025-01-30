@@ -47,7 +47,7 @@ public class KaKaoOAuthService {
                 // 로컬 환경
                 redirectUri = "http://localhost:5173/login/kakao";
             } else if (host.contains("localhost:8080")) {
-                redirectUri = "https://localhost:8080/login/oauth2/code/kakao";
+                redirectUri = "http://localhost:8080/login/oauth2/code/kakao";
             } else if(host.contains("mh-mh.vercel.app")){
                 // 프로덕션 환경
                 redirectUri = "https://mh-mh.vercel.app/login/kakao";
