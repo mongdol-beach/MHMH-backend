@@ -1,7 +1,7 @@
 package com.mondol.mhmh.auth.jwt;
 
 import com.mondol.mhmh.auth.oAuth.kakao.KaKaoOAuthService;
-import com.mondol.mhmh.auth.oAuth.kakao.NaverOAuthService;
+import com.mondol.mhmh.auth.oAuth.naver.NaverOAuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +29,8 @@ public class OAuth2LoginController {
 
     // 네이버
     @GetMapping("/login/oauth2/code/naver")
-    public TokenRs naverLogin(@RequestParam String code) {
-        return TokenRs.of("","");
-//        return naverService.;
+    public TokenRs naverLogin(@RequestParam String code, HttpServletRequest request) {
+        return naverService.getAccessToken(code, request);
     }
-
-
-
 
 }

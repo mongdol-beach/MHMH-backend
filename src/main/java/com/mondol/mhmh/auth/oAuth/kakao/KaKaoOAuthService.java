@@ -28,11 +28,11 @@ public class KaKaoOAuthService {
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
 
-//    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
-//    private String redirectUri;
+    @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
+    private String KAKAO_TOKEN_URL;
 
-    private final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
-    private final String KAKAO_USER_INFO_URL = "https://kapi.kakao.com/v2/user/me"; // 사용자 정보 가져오기
+    @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
+    private String KAKAO_USER_INFO_URL; // 사용자 정보 가져오기
 
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
