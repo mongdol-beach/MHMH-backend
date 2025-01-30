@@ -38,24 +38,25 @@ public class KaKaoOAuthService {
     private final JwtUtil jwtUtil;
 
     public ResponseEntity<TokenRs> getAccessToken(String authorizationCode, HttpServletRequest request) {
+        String redirectUri = "";
         try {
             RestTemplate restTemplate = new RestTemplate();
             String host = request.getHeader("Host");
-            String redirectUri = "http://localhost:5173/login/kakao";
+
             log.debug(host+ " :request host");
-//            if (host.contains("localhost:5173")) {
-//                // 로컬 환경
-//                redirectUri = "";
-//            } else if (host.contains("localhost:8080")) {
-//                redirectUri = "http://localhost:8080/login/oauth2/code/kakao";
-//            } else if(host.contains("mh-mh.vercel.app")){
-//                // 프로덕션 환경
-//                redirectUri = "https://mh-mh.vercel.app/login/kakao";
-//            } else if(host.contains("mhmh-backend.fly.dev")) {
-//                redirectUri = "https://mhmh-backend.fly.dev/login/oauth2/code/kakao/test";
-//            }else {
-//                throw new CustomException("허용된 host가 아닙니다.");
-//            }
+            if (host.contains("localhost:5173")) {
+                // 로컬 환경
+                redirectUri = "http://localhost:5173/login/kakao";
+            } else if (host.contains("localhost:8080")) {
+                redirectUri = "http://localhost:8080/login/oauth2/code/kakao";
+            } else if(host.contains("mh-mh.vercel.app")){
+                // 프로덕션 환경
+                redirectUri = "https://mh-mh.vercel.app/login/kakao";
+            } else if(host.contains("mhmh-backend.fly.dev")) {
+                redirectUri = "https://mhmh-backend.fly.dev/login/oauth2/code/kakao/test";
+            }else {
+                throw new CustomException("허용된 host가 아닙니다.");
+            }
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -85,7 +86,7 @@ public class KaKaoOAuthService {
         } catch (HttpClientErrorException e) {
             // 클라이언트 요청 문제 (4xx)
             System.err.println("여기 에러났어유..");
-            return new ResponseEntity<>(TokenRs.of(e.getMessage(), null), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(TokenRs.of(e.getMessage(), "redirect uri: "+redirectUri), HttpStatus.BAD_REQUEST);
 //            throw new CustomException("클라이언트 요청 에러: " + e.getResponseBodyAsString(), e);
         } catch (HttpServerErrorException e) {
             // 서버 문제 (5xx)
