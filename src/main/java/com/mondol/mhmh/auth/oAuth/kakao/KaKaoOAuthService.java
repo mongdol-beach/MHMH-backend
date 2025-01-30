@@ -41,7 +41,7 @@ public class KaKaoOAuthService {
         String redirectUri = "";
         try {
             RestTemplate restTemplate = new RestTemplate();
-            String host = request.getRequestURI();
+            String host = request.getRequestURL().toString();
 
             log.debug(host+ " :request host");
             if (host.contains("localhost:5173")) {
