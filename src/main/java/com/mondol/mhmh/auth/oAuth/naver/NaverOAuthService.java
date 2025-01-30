@@ -15,14 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.View;
 
 @RequiredArgsConstructor
 @Service
 @Log4j2
 public class NaverOAuthService {
-
-    private final View error;
     @Value("${spring.security.oauth2.client.registration.naver.client-id}")
     private String clientId;
 

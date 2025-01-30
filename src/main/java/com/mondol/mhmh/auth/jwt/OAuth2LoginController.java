@@ -5,6 +5,7 @@ import com.mondol.mhmh.auth.oAuth.naver.NaverOAuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +19,7 @@ public class OAuth2LoginController {
 
     // 카카오
     @GetMapping("/login/oauth2/code/kakao")
-    public TokenRs kakaoLogin(@RequestParam String code, HttpServletRequest request) {
+    public ResponseEntity<TokenRs> kakaoLogin(@RequestParam String code, HttpServletRequest request) {
         return kakaoService.getAccessToken(code, request);
     }
 

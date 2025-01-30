@@ -37,7 +37,7 @@ public class KaKaoOAuthService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-    public TokenRs getAccessToken(String authorizationCode, HttpServletRequest request) {
+    public ResponseEntity<TokenRs> getAccessToken(String authorizationCode, HttpServletRequest request) {
         try {
             RestTemplate restTemplate = new RestTemplate();
             String host = request.getHeader("Host");
@@ -81,19 +81,24 @@ public class KaKaoOAuthService {
             String accessToken = jwtUtil.generateAccessToken(id, userInfo.getEmail());
             String refreshToken = jwtUtil.generateRefreshToken(id);
 
-            return TokenRs.of(accessToken, refreshToken);
+            return new ResponseEntity<>(TokenRs.of(accessToken, refreshToken), HttpStatus.OK);
         } catch (HttpClientErrorException e) {
             // 클라이언트 요청 문제 (4xx)
-            throw new CustomException("클라이언트 요청 에러: " + e.getResponseBodyAsString(), e);
+            System.err.println("여기 에러났어유..");
+            return new ResponseEntity<>(TokenRs.of(e.getMessage(), null), HttpStatus.BAD_REQUEST);
+//            throw new CustomException("클라이언트 요청 에러: " + e.getResponseBodyAsString(), e);
         } catch (HttpServerErrorException e) {
             // 서버 문제 (5xx)
-            throw new CustomException("서버 에러: " + e.getResponseBodyAsString(), e);
+            return new ResponseEntity<>(TokenRs.of(e.getMessage(), null), HttpStatus.BAD_REQUEST);
+//            throw new CustomException("서버 에러: " + e.getResponseBodyAsString(), e);
         } catch (RestClientException e) {
+            return new ResponseEntity<>(TokenRs.of(e.getMessage(), null), HttpStatus.BAD_REQUEST);
             // 기타 RestTemplate 에러
-            throw new CustomException("RestTemplate 처리 중 에러: " + e.getMessage(), e);
+//            throw new CustomException("RestTemplate 처리 중 에러: " + e.getMessage(), e);
         } catch (Exception e) {
+            return new ResponseEntity<>(TokenRs.of(e.getMessage(), null), HttpStatus.SERVICE_UNAVAILABLE);
             // 기타 예외
-            throw new CustomException("예기치 못한 에러 발생: " + e.getMessage(), e);
+//            throw new CustomException("예기치 못한 에러 발생: " + e.getMessage(), e);
         }
     }
     private String createCookie(String name, String value, int maxAge, boolean httpOnly) {
