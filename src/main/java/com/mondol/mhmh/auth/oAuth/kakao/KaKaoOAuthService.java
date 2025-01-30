@@ -28,11 +28,11 @@ public class KaKaoOAuthService {
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String clientId;
 
-//    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
-//    private String redirectUri;
+    @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
+    private String KAKAO_TOKEN_URL;
 
-    private final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
-    private final String KAKAO_USER_INFO_URL = "https://kapi.kakao.com/v2/user/me"; // 사용자 정보 가져오기
+    @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
+    private String KAKAO_USER_INFO_URL; // 사용자 정보 가져오기
 
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
@@ -47,11 +47,13 @@ public class KaKaoOAuthService {
                 // 로컬 환경
                 redirectUri = "http://localhost:5173/login/kakao";
             } else if (host.contains("localhost:8080")) {
-                redirectUri = "http://localhost:8080/login/oauth2/code/kakao/test";
+                redirectUri = "http://localhost:8080/login/oauth2/code/kakao";
             } else if(host.contains("mh-mh.vercel.app")){
                 // 프로덕션 환경
                 redirectUri = "https://mh-mh.vercel.app/login/kakao";
-            }  else {
+            } else if(host.contains("mhmh-backend.fly.dev")) {
+                redirectUri = "https://mhmh-backend.fly.dev/login/oauth2/code/kakao";
+            }else {
                 throw new CustomException("허용된 host가 아닙니다.");
             }
 
