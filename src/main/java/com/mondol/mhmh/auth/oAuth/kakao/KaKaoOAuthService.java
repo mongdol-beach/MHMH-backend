@@ -88,7 +88,7 @@ public class KaKaoOAuthService {
         } catch (HttpClientErrorException e) {
             // 클라이언트 요청 문제 (4xx)
             System.err.println("여기 에러났어유..");
-            return new ResponseEntity<>(TokenRs.of(e.getMessage(), "redirect uri: "+redirectUri +"  host:" +request.getServerName() + ":" + request.getServerPort()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(TokenRs.of(e.getMessage(), "redirect uri: "+redirectUri +"  host:" + request.getHeader("Origin")), HttpStatus.BAD_REQUEST);
 //            throw new CustomException("클라이언트 요청 에러: " + e.getResponseBodyAsString(), e);
         } catch (HttpServerErrorException e) {
             // 서버 문제 (5xx)
