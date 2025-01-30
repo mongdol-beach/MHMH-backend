@@ -41,7 +41,7 @@ public class KaKaoOAuthService {
         String redirectUri = "";
         try {
             RestTemplate restTemplate = new RestTemplate();
-            String host = request.getHeader("Host");
+            String host = request.getRequestURI();
 
             log.debug(host+ " :request host");
             if (host.contains("localhost:5173")) {
@@ -86,7 +86,7 @@ public class KaKaoOAuthService {
         } catch (HttpClientErrorException e) {
             // 클라이언트 요청 문제 (4xx)
             System.err.println("여기 에러났어유..");
-            return new ResponseEntity<>(TokenRs.of(e.getMessage(), "redirect uri: "+redirectUri), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(TokenRs.of(e.getMessage(), "redirect uri: "+redirectUri +"  host:" +request.getRequestURI()), HttpStatus.BAD_REQUEST);
 //            throw new CustomException("클라이언트 요청 에러: " + e.getResponseBodyAsString(), e);
         } catch (HttpServerErrorException e) {
             // 서버 문제 (5xx)
