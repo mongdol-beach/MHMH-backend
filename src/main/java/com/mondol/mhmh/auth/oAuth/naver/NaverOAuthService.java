@@ -63,6 +63,20 @@ public class NaverOAuthService {
 
     }
 
+    private String getRedirectURI(String host) {
+        if (host.contains("localhost:5173")) {
+            // 로컬 환경
+            return "http://localhost:5173/login/naver";
+        } else if (host.contains("localhost:8080")) {
+            return  "http://localhost:8080/login/oauth2/code/naver";
+        } else if(host.contains("mh-mh.vercel.app")){
+            // 프로덕션 환경
+            return  "https://mh-mh.vercel.app/login/naver";
+        }  else {
+            throw new CustomException("허용된 host가 아닙니다.");
+        }
+    }
+
     private NaverTokenBody getToken(String code, String redirectUri) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -81,20 +95,6 @@ public class NaverOAuthService {
         ResponseEntity<NaverTokenBody> response = restTemplate.postForEntity(NAVER_TOKEN_URL, requestEntity, NaverTokenBody.class);
 
         return response.getBody();
-    }
-
-    private String getRedirectURI(String host) {
-        if (host.contains("localhost:5173")) {
-            // 로컬 환경
-            return "http://localhost:5173/login/naver";
-        } else if (host.contains("localhost:8080")) {
-            return  "http://localhost:8080/login/oauth2/code/naver";
-        } else if(host.contains("mh-mh.vercel.app")){
-            // 프로덕션 환경
-            return  "https://mh-mh.vercel.app/login/naver";
-        }  else {
-            throw new CustomException("허용된 host가 아닙니다.");
-        }
     }
 
     private NaverUserInfoBody getInfo(String token) {

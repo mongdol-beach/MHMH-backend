@@ -6,7 +6,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum LoginType {
+
     KAKAO("K_"),
-    NAVER("N_");
+    NAVER("N_"),
+    GOOGLE("G_");
+
     private final String idPre;
 }
