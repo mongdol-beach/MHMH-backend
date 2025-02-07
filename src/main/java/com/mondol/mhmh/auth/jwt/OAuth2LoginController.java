@@ -1,5 +1,6 @@
 package com.mondol.mhmh.auth.jwt;
 
+import com.mondol.mhmh.auth.oAuth.google.GoogleOAuthService;
 import com.mondol.mhmh.auth.oAuth.kakao.KaKaoOAuthService;
 import com.mondol.mhmh.auth.oAuth.naver.NaverOAuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OAuth2LoginController {
     private final KaKaoOAuthService kakaoService;
     private final NaverOAuthService naverService;
+    private final GoogleOAuthService googleService;
 
     // 카카오
     @GetMapping("/login/oauth2/code/kakao")
@@ -32,6 +34,12 @@ public class OAuth2LoginController {
     @GetMapping("/login/oauth2/code/naver")
     public TokenRs naverLogin(@RequestParam String code, HttpServletRequest request) {
         return naverService.getAccessToken(code, request);
+    }
+
+    // 구글
+    @GetMapping("/login/oauth2/code/google")
+    public TokenRs googleLogin(@RequestParam String code, HttpServletRequest request) {
+        return googleService.getAccessToken(code, request);
     }
 
 }
