@@ -55,7 +55,6 @@ public class GoogleOAuthService {
         String profile = userResourceNode.get("picture").asText();
 
         if (userRepository.findById(id).isEmpty()) {
-            // null일 경우 있으르 수 이씀
             userRepository.save(UserEntity.from(id, nickname, email, profile, LoginType.GOOGLE));
         }
 
@@ -70,13 +69,15 @@ public class GoogleOAuthService {
 
         if (host.contains("localhost:5173")) {
             // 로컬 환경
-            return "http://localhost:5173/login/naver";
+            return "http://localhost:5173/login/google";
         } else if (host.contains("localhost:8080")) {
             return  "http://localhost:8080/login/oauth2/code/google";
         } else if(host.contains("mh-mh.vercel.app")){
             // 프로덕션 환경
-            return  "https://mh-mh.vercel.app/login/naver";
-        }  else {
+            return  "https://mh-mh.vercel.app/login/google";
+        }  else if (host.contains("mhmh-backend.fly.dev")) {
+            return "https://mhmh-backend.fly.dev/login/oauth2/code/google";
+        } else {
             throw new CustomException("허용된 host가 아닙니다.");
         }
     }
