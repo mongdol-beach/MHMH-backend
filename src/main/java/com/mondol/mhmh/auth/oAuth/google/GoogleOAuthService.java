@@ -6,6 +6,7 @@ import com.mondol.mhmh.auth.jwt.TokenRs;
 import com.mondol.mhmh.auth.oAuth.LoginType;
 import com.mondol.mhmh.exception.CustomException;
 import com.mondol.mhmh.user.repository.UserRepository;
+import com.mondol.mhmh.user.schema.UserEntity;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -52,11 +53,10 @@ public class GoogleOAuthService {
         String email = userResourceNode.get("email").asText();
         String nickname = userResourceNode.get("name").asText();
         String profile = userResourceNode.get("picture").asText();
-        System.out.print(email + " " + nickname + " " +" " + id + "  " + profile);
 
         if (userRepository.findById(id).isEmpty()) {
             // null일 경우 있으르 수 이씀
-//            userRepository.save(UserEntity.from(id, nickname, email, null, LoginType.GOOGLE));
+            userRepository.save(UserEntity.from(id, nickname, email, profile, LoginType.GOOGLE));
         }
 
         String accessToken = jwtUtil.generateAccessToken(id, email);
