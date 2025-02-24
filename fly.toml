@@ -1,10 +1,10 @@
-# fly.toml app configuration file generated for mhmh-backend on 2024-12-07T07:06:20Z
+# fly.toml app configuration file generated for mhmh-api-dev on 2025-02-24T12:10:21Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'mhmh-backend'
-primary_region = 'nrt'
+app = 'mhmh-api-dev'
+primary_region = 'sjc'
 
 [build]
 
@@ -19,5 +19,5 @@ primary_region = 'nrt'
 [[vm]]
   memory = '1gb'
   cpu_kind = 'shared'
-  cpus = 1
-  memory_mb = 1024
+  cpus = 2
+  memory_mb = 512
