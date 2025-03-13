@@ -5,6 +5,7 @@ import com.mondol.mhmh.topic.dto.TopicReadDto;
 import com.mondol.mhmh.topic.dto.TopicTipDto;
 import com.mondol.mhmh.topic.repository.TopicRepository;
 import com.mondol.mhmh.topic.schema.TopicEntity;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,13 +23,13 @@ import java.util.List;
 public class TopicService {
     private final TopicRepository topicRepository;
 
-    public Page<RandomTopicReadDto> readRandomTopicList(int page, int size) {
+    @Transactional
+    public Page<RandomTopicReadDto> readRandomTopicList(int page, int size, int seed) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<TopicEntity> topics = topicRepository.findAll(pageable);
+        Page<TopicEntity> topics = topicRepository.findAllRandomWithSeed(seed, pageable);
 
         List<RandomTopicReadDto> dtos = topics.getContent()
                 .stream()
-                .sorted((a, b) -> Double.compare(Math.random(), 0.5)) // 랜덤으로 섞기
                 .map(this::convertToDto)
                 .toList();
 
