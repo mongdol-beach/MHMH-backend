@@ -25,9 +25,8 @@ public class TopicController {
             @Parameter(name = "size")
     })
     @GetMapping()
-    public TopicReadListRs readRandomTopic(@RequestParam() int page, @RequestParam int size) {
-
-        Page<RandomTopicReadDto> dtos = topicService.readRandomTopicList(page, size);
+    public TopicReadListRs readRandomTopic(@RequestParam() int page, @RequestParam int size, @RequestParam(defaultValue = "1") int seed) {
+        Page<RandomTopicReadDto> dtos = topicService.readRandomTopicList(page, size, seed);
         return TopicReadListRs.of(
                 dtos.getContent().stream().map(TopicReadItemRs::from).toList(),
                 page,
