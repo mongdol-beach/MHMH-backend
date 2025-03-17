@@ -22,7 +22,8 @@ public class TopicController {
 
     @Operation(summary = "랜덤 토픽 리스트를 조회해옵니다.", parameters = {
             @Parameter(name = "page"),
-            @Parameter(name = "size")
+            @Parameter(name = "size"),
+            @Parameter(name = "seed")
     })
     @GetMapping()
     public TopicReadListRs readRandomTopic(@RequestParam() int page, @RequestParam int size, @RequestParam(defaultValue = "1") int seed) {
