@@ -1,5 +1,6 @@
 package com.mondol.mhmh.topic;
 
+import com.mondol.mhmh.situation.schema.PersonSituationType;
 import com.mondol.mhmh.situation.schema.SituationType;
 import com.mondol.mhmh.topic.dto.RandomTopicReadDto;
 import com.mondol.mhmh.topic.rqrs.*;
@@ -50,5 +51,17 @@ public class TopicController {
     public AllTopicReadListRs readAllTopicBySituation(@PathVariable SituationType situation) {
         List<AllTopicReadItemRs> topic = topicService.readALlTopicBySituation(situation.toString()).stream().map(AllTopicReadItemRs::from).toList();
         return AllTopicReadListRs.of(situation, topic);
+    }
+
+    @Operation(summary = "인물별 토픽 리스트를 조회해옵니다.")
+    @GetMapping("/situation/person/{person}")
+    public SituationTopicReadListRs readTopicBySituation(@PathVariable PersonSituationType person) {
+        return null;
+    }
+
+    @Operation(summary = "인물별 전체 토픽 리스트를 조회해옵니다.")
+    @GetMapping("/situation/person/{person}/all")
+    public AllPersonTopicReadListRs readAllTopicBySituation(@PathVariable PersonSituationType person) {
+        return null;
     }
 }
