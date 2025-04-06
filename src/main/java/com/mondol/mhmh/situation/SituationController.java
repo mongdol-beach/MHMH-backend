@@ -29,6 +29,9 @@ public class SituationController {
     @Operation(summary = "인물별 상황 목록을 조회해옵니다.")
     @GetMapping("/person")
     public SituationReadListRs readPersonSituation() {
-        return null;
+        return SituationReadListRs.of(
+                situationService.readPersonSituationList()
+                        .stream().map(SituationReadItemRs::from).toList()
+        );
     }
 }
