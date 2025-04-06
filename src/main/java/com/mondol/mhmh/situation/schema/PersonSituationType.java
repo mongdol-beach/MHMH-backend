@@ -6,6 +6,10 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum PersonSituationType {
-    COLLEAGUE("직장 동료");
+    COLLEAGUE("직장 동료"),
+    SENIORITY("선후배"),
+    CLUB("동호회"),
+    OLD_FRIEND("오랜만에 만난 친구"),
+    FAMILY("가족");
     private final String name;
 }
