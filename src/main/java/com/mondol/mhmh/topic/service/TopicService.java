@@ -67,6 +67,27 @@ public class TopicService {
         )).toList();
     }
 
+    public List<TopicReadDto> readRandomTopicByPersonSituation(int count, String situation) {
+        List<TopicEntity> topics = topicRepository.findAllByPersonSituationType(situation);
+
+        Collections.shuffle(topics);
+
+        return topics.subList(0, Math.min(topics.size(), count)).stream().map(topic -> new TopicReadDto(
+                topic.getId(), topic.getContent(),
+                getCommonTips()
+        )).toList();
+    }
+
+
+    public List<TopicReadDto> readAllTopicByPersonSituation(String situation) {
+        List<TopicEntity> topics = topicRepository.findAllByPersonSituationType(situation);
+
+        return topics.stream().map(topic -> new TopicReadDto(
+                topic.getId(), topic.getContent(),
+                getCommonTips()
+        )).toList();
+    }
+
     // 하나의 팁만 사용하게 되면서 db에 저장하지 않도록 바꾸었습니다.
     public List<TopicTipDto> getCommonTips() {
         List<TopicTipDto> dto = new ArrayList<>();

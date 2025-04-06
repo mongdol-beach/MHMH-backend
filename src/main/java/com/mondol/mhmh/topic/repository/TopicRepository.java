@@ -26,4 +26,6 @@ public interface TopicRepository extends JpaRepository<TopicEntity, Integer> {
 
 
     List<TopicEntity> findAllBySituationType(String type);
+
+    List<TopicEntity> findAllByPersonSituationType(String type);
 }

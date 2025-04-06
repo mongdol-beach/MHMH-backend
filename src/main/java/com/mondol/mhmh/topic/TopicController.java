@@ -56,12 +56,16 @@ public class TopicController {
     @Operation(summary = "인물별 토픽 리스트를 조회해옵니다.")
     @GetMapping("/situation/person/{person}")
     public SituationTopicReadListRs readTopicBySituation(@PathVariable PersonSituationType person) {
-        return null;
+        return SituationTopicReadListRs.of(
+                person.toString(), person.getName(), SituationCardColor.valueOf(person.toString()),
+                topicService.readRandomTopicByPersonSituation(5, person.toString()).stream().map(SituationTopicReadItemRs::from).toList()
+        );
     }
 
     @Operation(summary = "인물별 전체 토픽 리스트를 조회해옵니다.")
     @GetMapping("/situation/person/{person}/all")
     public AllPersonTopicReadListRs readAllTopicBySituation(@PathVariable PersonSituationType person) {
-        return null;
+        List<AllTopicReadItemRs> topic = topicService.readAllTopicByPersonSituation(person.toString()).stream().map(AllTopicReadItemRs::from).toList();
+        return AllPersonTopicReadListRs.of(person, topic);
     }
 }

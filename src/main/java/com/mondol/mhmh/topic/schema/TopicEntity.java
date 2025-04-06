@@ -1,5 +1,6 @@
 package com.mondol.mhmh.topic.schema;
 
+import com.mondol.mhmh.situation.schema.PersonSituationEntity;
 import com.mondol.mhmh.situation.schema.SituationEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,9 @@ public class TopicEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private SituationEntity situation;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private PersonSituationEntity personSituation;
 
     @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<TopicTipEntity> tips;
