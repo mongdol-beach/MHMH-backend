@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.List;
 
@@ -22,6 +23,11 @@ public class TopicEntity {
 
     @Column(nullable = false)
     private String content;
+
+    @Column(nullable = false)
+    @ColumnDefault(value = "SITUATION")
+    @Enumerated(EnumType.STRING)
+    private TopicGroupType group;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private SituationEntity situation;

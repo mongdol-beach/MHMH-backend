@@ -18,7 +18,7 @@ public class TopicReadItemRs {
 
     public static TopicReadItemRs from(RandomTopicReadDto dto) {
         return new TopicReadItemRs(
-                dto.getId(), dto.getContent(), dto.getTopicTip().stream().map(TopicTipRs::from).toList(), dto.getSituationId(), dto.getSituationName(), SituationCardColor.valueOf(dto.getSituationId().toString())
+                dto.getId(), dto.getContent(), dto.getTopicTip().stream().map(TopicTipRs::from).toList(), dto.getSituationId().toString(), dto.getSituationName(), SituationCardColor.valueOf(dto.getSituationId().toString())
         );
     }
 }

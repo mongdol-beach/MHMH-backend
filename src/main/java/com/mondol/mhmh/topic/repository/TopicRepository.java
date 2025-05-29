@@ -25,6 +25,13 @@ public interface TopicRepository extends JpaRepository<TopicEntity, Integer> {
 
 
 
+    @Query(value = "SELECT setseed(:seed)", nativeQuery = true)
+    void setSeed(@Param("seed") double seed);
+
+    @Query(value = "SELECT * FROM topic ORDER BY random()",
+            countQuery = "SELECT COUNT(*) FROM topic",
+            nativeQuery = true)
+    Page<TopicEntity> findAllRandom(Pageable pageable);
     List<TopicEntity> findAllBySituationType(String type);
 
     List<TopicEntity> findAllByPersonSituationType(String type);
