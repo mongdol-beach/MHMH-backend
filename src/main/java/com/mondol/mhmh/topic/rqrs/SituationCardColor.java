@@ -12,7 +12,13 @@ public enum SituationCardColor {
     TOGETHER("F1EDFF", "957AFA", "BCA9FF", "6240DE"),
     DATE("FFE9E9", "F27878", "FFB2B4", "CE383A"),
     SMALL("E7F5FF", "54ABE9", "A8DAFE", "1E81C8"),
-    COUPLE("FFE5F1", "ED79AC", "FFB4D5", "CB3979");
+    COUPLE("FFE5F1", "ED79AC", "FFB4D5", "CB3979"),
+
+    COLLEAGUE("E8EEFF", "5881F3", "97B2FF", "2D56CA"),
+    SENIORITY("FFE5DF", "F1805D", "FFAA98", "C34415"),
+    CLUB("F1EDFF", "957AFA", "BCA9FF", "6240DE"),
+    OLD_FRIEND("FFE9E9", "F27878", "FFB2B4", "CE383A"),
+    FAMILY("E7F5FF", "54ABE9", "A8DAFE", "1E81C8");
 
     @JsonProperty("backgroundColor")
     private final String backgroundColor;
