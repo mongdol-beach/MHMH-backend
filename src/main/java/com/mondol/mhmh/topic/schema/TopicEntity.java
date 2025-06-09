@@ -5,8 +5,6 @@ import com.mondol.mhmh.situation.schema.SituationEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,7 +16,6 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 @Table
 @Entity(name = "topic")
@@ -33,11 +30,6 @@ public class TopicEntity {
 
     @Column(nullable = false)
     private String content;
-
-    @Column(nullable = false)
-    @ColumnDefault(value = "SITUATION")
-    @Enumerated(EnumType.STRING)
-    private TopicGroupType topicGroup;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private SituationEntity situation;

@@ -6,17 +6,16 @@ import com.mondol.mhmh.topic.dto.TopicTipDto;
 import com.mondol.mhmh.topic.repository.TopicRepository;
 import com.mondol.mhmh.topic.schema.TopicEntity;
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +67,7 @@ public class TopicService {
     }
 
     public List<TopicReadDto> readRandomTopicByPersonSituation(int count, String situation) {
-        List<TopicEntity> topics = topicRepository.findAllByPersonSituationType(situation);
+        List<TopicEntity> topics = topicRepository.findAllBySituationType(situation);
 
         Collections.shuffle(topics);
 
@@ -80,7 +79,7 @@ public class TopicService {
 
 
     public List<TopicReadDto> readAllTopicByPersonSituation(String situation) {
-        List<TopicEntity> topics = topicRepository.findAllByPersonSituationType(situation);
+        List<TopicEntity> topics = topicRepository.findAllBySituationType(situation);
 
         return topics.stream().map(topic -> new TopicReadDto(
                 topic.getId(), topic.getContent(),

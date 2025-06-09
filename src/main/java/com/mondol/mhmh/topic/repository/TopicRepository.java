@@ -1,13 +1,12 @@
 package com.mondol.mhmh.topic.repository;
 
 import com.mondol.mhmh.topic.schema.TopicEntity;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.util.List;
 
 public interface TopicRepository extends JpaRepository<TopicEntity, Integer> {
     @Query(value = "SELECT * FROM topic TABLESAMPLE BERNOULLI(10) LIMIT :limit", nativeQuery = true)
@@ -32,7 +31,8 @@ public interface TopicRepository extends JpaRepository<TopicEntity, Integer> {
             countQuery = "SELECT COUNT(*) FROM topic",
             nativeQuery = true)
     Page<TopicEntity> findAllRandom(Pageable pageable);
+
     List<TopicEntity> findAllBySituationType(String type);
 
-    List<TopicEntity> findAllByPersonSituationType(String type);
+    List<TopicEntity> findAllByPersonSituation_Type(String type);
 }
