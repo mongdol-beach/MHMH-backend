@@ -8,6 +8,15 @@ CREATE TABLE situation
     CONSTRAINT pk_situation PRIMARY KEY (type)
 );
 
+CREATE TABLE person_situation
+(
+    type       VARCHAR(100) NOT NULL,
+    title      VARCHAR(100),
+    color      VARCHAR(12), -- 5881F3
+    text_color VARCHAR(12), -- FFFFFF
+    CONSTRAINT pk_person_situation PRIMARY KEY (type)
+);
+
 -- topic table
 CREATE TABLE topic
 (
