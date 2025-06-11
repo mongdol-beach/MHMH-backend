@@ -25,6 +25,7 @@ public class TopicService {
     @Transactional
     public Page<RandomTopicReadDto> readRandomTopicList(int page, int size, int seed) {
         Pageable pageable = PageRequest.of(page, size);
+
         Page<TopicEntity> topics = topicRepository.findAllRandomWithSeed(seed, pageable);
 
         List<RandomTopicReadDto> dtos = topics.getContent()
